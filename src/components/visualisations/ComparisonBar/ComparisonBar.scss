@@ -1,0 +1,80 @@
+.comparison-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.comparison-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.comparison-bar-label {
+    color: var(--ink-mid);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.comparison-bar-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.comparison-bar-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.comparison-bar-player {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.comparison-bar-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-pill);
+    background: var(--comparison-bar-dot-colour, var(--ink-mid));
+    display: inline-block;
+}
+
+.comparison-bar-name {
+    color: var(--ink-high);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-md);
+}
+
+.comparison-bar-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.comparison-bar-fill {
+    height: 100%;
+    width: var(--comparison-bar-fill-width, 0%);
+    background: var(--comparison-bar-fill-colour, var(--brand));
+    border-radius: var(--radius-pill);
+    transition: width var(--motion-base) var(--motion-ease);
+}
+
+.comparison-bar-value {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.comparison-bar-value-text {
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+    font-size: var(--text-md);
+}

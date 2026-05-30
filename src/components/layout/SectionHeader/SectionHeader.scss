@@ -1,0 +1,27 @@
+.section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-7);
+}
+
+.section-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header-title {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.section-header-description {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--ink-low);
+}
+
+.section-header-action {
+    flex-shrink: 0;
+}

@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "types": ["vite/client"],
+        "skipLibCheck": true,
+
+        "moduleResolution": "Bundler",
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        "baseUrl": "src",
+        "paths": {
+            "api": ["api"],
+            "api/*": ["api/*"],
+            "assets/*": ["assets/*"],
+            "components": ["components"],
+            "components/*": ["components/*"],
+            "config": ["config"],
+            "db": ["db"],
+            "helpers": ["helpers"],
+            "helpers/*": ["helpers/*"],
+            "hooks": ["hooks"],
+            "hooks/*": ["hooks/*"],
+            "models": ["models"],
+            "models/*": ["models/*"],
+            "pages/*": ["pages/*"],
+            "sync": ["sync"],
+            "sync/*": ["sync/*"]
+        }
+    },
+    "include": ["src"]
+}

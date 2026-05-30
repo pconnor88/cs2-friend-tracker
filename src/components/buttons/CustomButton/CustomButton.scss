@@ -1,0 +1,80 @@
+.custom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    border-radius: var(--radius-md);
+    font-family: var(--font-ui);
+    font-weight: var(--weight-semibold);
+    line-height: 1;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background var(--motion-fast) var(--motion-ease),
+        border-color var(--motion-fast) var(--motion-ease),
+        color var(--motion-fast) var(--motion-ease),
+        opacity var(--motion-fast) var(--motion-ease);
+}
+
+.custom-button-sm {
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+}
+
+.custom-button-md {
+    padding: var(--space-4) var(--space-7);
+    font-size: var(--text-md);
+}
+
+.custom-button-primary {
+    background: var(--brand);
+    color: var(--ink-high);
+
+    &:hover:not(:disabled) {
+        background: var(--brand-dim);
+    }
+}
+
+.custom-button-secondary {
+    background: var(--surface-elevated);
+    color: var(--ink-high);
+    border-color: var(--border);
+
+    &:hover:not(:disabled) {
+        background: var(--surface-overlay);
+        border-color: var(--border-strong);
+    }
+}
+
+.custom-button-ghost {
+    background: transparent;
+    color: var(--ink-mid);
+
+    &:hover:not(:disabled) {
+        color: var(--ink-high);
+        background: var(--surface-elevated);
+    }
+}
+
+.custom-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.custom-button-loading {
+    cursor: progress;
+}
+
+.custom-button-spinner {
+    animation: custom-button-spin 800ms linear infinite;
+}
+
+.custom-button-label {
+    display: inline-flex;
+    align-items: center;
+}
+
+@keyframes custom-button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

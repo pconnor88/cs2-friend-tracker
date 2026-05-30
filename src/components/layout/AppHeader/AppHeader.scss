@@ -1,0 +1,40 @@
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-6) var(--space-9);
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+
+.app-header-brand {
+    display: flex;
+    align-items: center;
+}
+
+.app-header-brand-glyph {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.app-header-brand-text {
+    margin-left: var(--space-4);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.app-header-spacer {
+    flex: 1;
+}
+
+.app-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+}

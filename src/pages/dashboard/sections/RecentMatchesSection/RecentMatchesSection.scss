@@ -1,0 +1,168 @@
+.recent-matches {
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-matches-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-matches-row {
+    display: grid;
+    grid-template-columns: 160px 160px 120px 1fr 32px;
+    gap: var(--space-5);
+    align-items: center;
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    color: var(--ink-high);
+    font-family: var(--font-ui);
+    font-size: var(--text-md);
+    transition: background var(--motion-fast) var(--motion-ease);
+}
+
+.recent-matches-row:hover {
+    background: var(--surface-overlay);
+}
+
+.recent-matches-row-open {
+    background: var(--surface-overlay);
+    border-bottom-color: transparent;
+}
+
+.recent-matches-date {
+    font-size: var(--text-md);
+    color: var(--ink-mid);
+}
+
+.recent-matches-map {
+    font-size: var(--text-md);
+    font-weight: var(--weight-bold);
+    color: var(--ink-high);
+}
+
+.recent-matches-score {
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+}
+
+.recent-matches-score.result-win {
+    color: var(--positive);
+}
+
+.recent-matches-score.result-loss {
+    color: var(--negative);
+}
+
+.recent-matches-score.result-tie {
+    color: var(--ink-low);
+}
+
+.recent-matches-players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.recent-matches-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    font-size: var(--text-sm);
+    color: var(--ink-mid);
+}
+
+.recent-matches-chip-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    flex-shrink: 0;
+}
+
+.recent-matches-chip-dot-1 {
+    background: var(--player-1);
+}
+
+.recent-matches-chip-dot-2 {
+    background: var(--player-2);
+}
+
+.recent-matches-chip-dot-3 {
+    background: var(--player-3);
+}
+
+.recent-matches-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-low);
+    transition: transform var(--motion-fast) var(--motion-ease);
+}
+
+.recent-matches-chevron-open {
+    transform: rotate(90deg);
+}
+
+.recent-matches-body {
+    background: var(--surface-overlay);
+    padding: var(--space-7) var(--space-9);
+    border-bottom: 1px solid var(--border);
+}
+
+.recent-matches-scoreboard {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(6, 1fr);
+    gap: var(--space-4) var(--space-5);
+    font-size: var(--text-sm);
+}
+
+.recent-matches-scoreboard-head {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    color: var(--ink-low);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.04em;
+}
+
+.recent-matches-scoreboard-row {
+    display: contents;
+}
+
+.recent-matches-scoreboard-name {
+    color: var(--ink-high);
+    font-weight: var(--weight-semibold);
+    padding-top: var(--space-3);
+    border-top: 2px solid var(--border);
+}
+
+.recent-matches-scoreboard-cell {
+    color: var(--ink-mid);
+    padding-top: var(--space-3);
+    border-top: 2px solid var(--border);
+}
+
+.recent-matches-scoreboard-row-1 .recent-matches-scoreboard-name,
+.recent-matches-scoreboard-row-1 .recent-matches-scoreboard-cell {
+    border-top-color: var(--player-1);
+}
+
+.recent-matches-scoreboard-row-2 .recent-matches-scoreboard-name,
+.recent-matches-scoreboard-row-2 .recent-matches-scoreboard-cell {
+    border-top-color: var(--player-2);
+}
+
+.recent-matches-scoreboard-row-3 .recent-matches-scoreboard-name,
+.recent-matches-scoreboard-row-3 .recent-matches-scoreboard-cell {
+    border-top-color: var(--player-3);
+}

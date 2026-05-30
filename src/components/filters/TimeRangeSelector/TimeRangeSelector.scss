@@ -1,0 +1,35 @@
+.time-range-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+}
+
+.time-range-selector-pill {
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-mid);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background var(--motion-fast) var(--motion-ease),
+        color var(--motion-fast) var(--motion-ease);
+
+    &:hover {
+        color: var(--ink-high);
+    }
+}
+
+.time-range-selector-pill-selected {
+    background: var(--brand);
+    color: var(--ink-high);
+
+    &:hover {
+        color: var(--ink-high);
+    }
+}

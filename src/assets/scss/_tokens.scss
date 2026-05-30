@@ -1,0 +1,73 @@
+:root {
+    --bg: #0a0d12;
+    --surface: #11161f;
+    --surface-elevated: #1a2030;
+    --surface-overlay: #222a3a;
+    --border: #252b38;
+    --border-strong: #353c4d;
+
+    --ink-high: #e8eaed;
+    --ink-mid: #b8bcc8;
+    --ink-low: #8a8f9b;
+    --ink-subtle: #5a5f6b;
+
+    --brand: #ff7b2c;
+    --brand-dim: #b8541a;
+    --positive: #00d4aa;
+    --negative: #ef4444;
+    --warning: #ffb800;
+
+    --player-1: #eda338;
+    --player-2: #109856;
+    --player-3: #68a3e5;
+
+    --rank-gold: #ffb800;
+    --rank-silver: #c0c5cf;
+    --rank-bronze: #cd7f32;
+
+    --space-1: 2px;
+    --space-2: 4px;
+    --space-3: 6px;
+    --space-4: 8px;
+    --space-5: 12px;
+    --space-6: 16px;
+    --space-7: 20px;
+    --space-8: 24px;
+    --space-9: 32px;
+    --space-10: 40px;
+    --space-11: 48px;
+    --space-12: 64px;
+    --space-13: 80px;
+
+    --text-xs: 11px;
+    --text-sm: 12px;
+    --text-md: 14px;
+    --text-lg: 16px;
+    --text-xl: 18px;
+    --text-2xl: 22px;
+    --text-3xl: 28px;
+    --text-4xl: 36px;
+    --text-5xl: 48px;
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-pill: 999px;
+
+    --motion-fast: 120ms;
+    --motion-base: 200ms;
+    --motion-slow: 320ms;
+    --motion-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+    --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}

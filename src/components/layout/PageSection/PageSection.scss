@@ -1,0 +1,11 @@
+.page-section {
+    padding: var(--space-9);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.page-section-body {
+    margin-top: var(--space-7);
+}

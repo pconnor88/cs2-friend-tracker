@@ -1,0 +1,36 @@
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.rank-badge-sm {
+    width: 16px;
+    height: 16px;
+    font-size: var(--text-xs);
+}
+
+.rank-badge-md {
+    width: 22px;
+    height: 22px;
+    font-size: var(--text-sm);
+}
+
+.rank-badge-gold {
+    color: var(--rank-gold);
+    background: color-mix(in srgb, var(--rank-gold) 18%, transparent);
+}
+
+.rank-badge-silver {
+    color: var(--rank-silver);
+    background: color-mix(in srgb, var(--rank-silver) 18%, transparent);
+}
+
+.rank-badge-bronze {
+    color: var(--rank-bronze);
+    background: color-mix(in srgb, var(--rank-bronze) 18%, transparent);
+}

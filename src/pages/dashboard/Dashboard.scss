@@ -1,0 +1,27 @@
+.dashboard {
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+.dashboard-main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--space-9);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-9);
+}
+
+.dashboard-inert {
+    pointer-events: none;
+    user-select: none;
+    filter: blur(4px);
+    transition: filter var(--motion-base) var(--motion-ease);
+}
+
+@media (max-width: 768px) {
+    .dashboard-main {
+        padding: var(--space-7) var(--space-5);
+        gap: var(--space-7);
+    }
+}

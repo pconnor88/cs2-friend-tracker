@@ -111,6 +111,66 @@ export const setPlayerSyncTimestamp = async (
 export const getPlayerSync = (steam64: string): Promise<PlayerSyncRecord | undefined> =>
     db.players.get(steam64);
 
+export interface DbExport {
+    version: number;
+    exportedAt: string;
+    matches: Match[];
+    players: PlayerSyncRecord[];
+    matchPlayers: MatchPlayerLink[];
+    profileSnapshots: ProfileSnapshotRecord[];
+}
+
+const EXPORT_VERSION = 1;
+
+export const exportAll = async (): Promise<DbExport> => {
+    const [matches, players, matchPlayers, profileSnapshots] = await Promise.all([
+        db.matches.toArray(),
+        db.players.toArray(),
+        db.matchPlayers.toArray(),
+        db.profileSnapshots.toArray()
+    ]);
+    return {
+        version: EXPORT_VERSION,
+        exportedAt: new Date().toISOString(),
+        matches,
+        players,
+        matchPlayers,
+        profileSnapshots
+    };
+};
+
+export const importAll = async (payload: DbExport): Promise<void> => {
+    if (typeof payload !== "object" || payload === null) {
+        throw new Error("Invalid import payload: expected an object.");
+    }
+    if (payload.version !== EXPORT_VERSION) {
+        throw new Error(`Unsupported export version ${payload.version}; expected ${EXPORT_VERSION}.`);
+    }
+    if (!Array.isArray(payload.matches)
+        || !Array.isArray(payload.players)
+        || !Array.isArray(payload.matchPlayers)
+        || !Array.isArray(payload.profileSnapshots)) {
+        throw new Error("Invalid import payload: missing one of matches / players / matchPlayers / profileSnapshots.");
+    }
+    await db.transaction(
+        "rw",
+        db.matches,
+        db.players,
+        db.matchPlayers,
+        db.profileSnapshots,
+        async () => {
+            await db.matches.clear();
+            await db.players.clear();
+            await db.matchPlayers.clear();
+            await db.profileSnapshots.clear();
+            await db.matches.bulkPut(payload.matches);
+            await db.players.bulkPut(payload.players);
+            await db.matchPlayers.bulkPut(payload.matchPlayers);
+            await db.profileSnapshots.bulkPut(payload.profileSnapshots);
+        }
+    );
+};
+
 export const clearAll = async (): Promise<void> => {
     await db.transaction(
         "rw",

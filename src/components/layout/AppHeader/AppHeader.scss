@@ -39,5 +39,40 @@
 .app-header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
+    gap: var(--space-4);
+}
+
+.app-header-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    color: var(--ink-mid);
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background var(--motion-fast) var(--motion-ease),
+        color var(--motion-fast) var(--motion-ease),
+        border-color var(--motion-fast) var(--motion-ease);
+
+    &:hover:not(:disabled) {
+        background: var(--surface-overlay);
+        color: var(--ink-high);
+        border-color: var(--border-strong);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.app-header-icon-button-spinning svg {
+    animation: app-header-icon-spin var(--motion-slow) linear infinite;
+}
+
+@keyframes app-header-icon-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }

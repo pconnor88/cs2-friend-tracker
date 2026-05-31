@@ -1,2 +1,1 @@
 export * from "./SettingsModal";
-export * from "./SyncOverlay";

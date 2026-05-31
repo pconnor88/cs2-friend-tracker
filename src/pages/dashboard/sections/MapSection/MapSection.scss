@@ -11,20 +11,7 @@
     padding: var(--space-7);
     background: var(--surface-elevated);
     border: 1px solid var(--border);
-    border-top: 3px solid var(--border);
     border-radius: var(--radius-md);
-}
-
-.map-card-player-1 {
-    border-top-color: var(--player-1);
-}
-
-.map-card-player-2 {
-    border-top-color: var(--player-2);
-}
-
-.map-card-player-3 {
-    border-top-color: var(--player-3);
 }
 
 .map-card-header {

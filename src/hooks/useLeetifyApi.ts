@@ -4,14 +4,16 @@ import { fetchGame, fetchProfile, mapLeetifyGameToMatch } from "api";
 import { LeetifyProfileGame } from "api/types";
 import { PLAYERS } from "config";
 import {
+    getAllPlayerProfiles,
     getKnownGameIds,
     getMatchesInRange,
     getProfileSnapshotsInRange,
     setPlayerSyncTimestamp,
     upsertMatch,
+    upsertPlayerProfile,
     upsertProfileSnapshot
 } from "db";
-import { ProfileSnapshotRecord } from "db/types";
+import { PlayerProfileRecord, ProfileSnapshotRecord } from "db/types";
 import { aggregatePlayerStats, rangeForPeriod } from "helpers";
 import { Match, PlayerConfig, PlayerStats, StatPeriod } from "models";
 import { syncStore } from "sync";
@@ -51,6 +53,28 @@ const syncPlayer = async (player: PlayerConfig): Promise<void> => {
             isCompletedLongMatch: pg.isCompletedLongMatch
         });
     }
+
+    await upsertPlayerProfile({
+        steam64: player.steam64,
+        updatedAt: new Date().toISOString(),
+        recentGameRatings: {
+            aim: profile.recentGameRatings?.aim,
+            positioning: profile.recentGameRatings?.positioning,
+            utility: profile.recentGameRatings?.utility,
+            clutch: profile.recentGameRatings?.clutch,
+            opening: profile.recentGameRatings?.opening,
+            leetify: profile.recentGameRatings?.leetify,
+            ctLeetify: profile.recentGameRatings?.ctLeetify,
+            tLeetify: profile.recentGameRatings?.tLeetify,
+            gamesPlayed: profile.recentGameRatings?.gamesPlayed,
+            leetifyRatingRounds: profile.recentGameRatings?.leetifyRatingRounds
+        },
+        personalBests: (profile.personalBestsCs2 ?? []).map(pb => ({
+            gameId: pb.gameId,
+            skillId: pb.skillId,
+            value: pb.value
+        }))
+    });
 
     const known = await getKnownGameIds(player.steam64);
     const newGameIds = profileGames
@@ -115,6 +139,14 @@ export const useProfileSnapshots = (period: StatPeriod, customRange?: { from: Da
     );
 };
 
+export const usePlayerProfiles = () => {
+    const { anchor } = usePeriodAnchor();
+    return useApiQuery<PlayerProfileRecord[]>(
+        ["playerProfiles", anchor.toISOString()],
+        () => getAllPlayerProfiles()
+    );
+};
+
 export const useStatsForAllPlayers = (
     period: StatPeriod,
     customRange?: { from: Date; to: Date },
@@ -138,5 +170,6 @@ export const useSync = () => {
         await syncAllPlayers();
         await queryClient.invalidateQueries({ queryKey: ["matches"] });
         await queryClient.invalidateQueries({ queryKey: ["snapshots"] });
+        await queryClient.invalidateQueries({ queryKey: ["playerProfiles"] });
     };
 };

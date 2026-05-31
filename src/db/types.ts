@@ -22,3 +22,21 @@ export interface ProfileSnapshotRecord {
     hasBannedPlayer?: boolean;
     isCompletedLongMatch?: boolean;
 }
+
+export interface PlayerProfileRecord {
+    steam64: string;
+    updatedAt: string;
+    recentGameRatings: {
+        aim?: number;
+        positioning?: number;
+        utility?: number;
+        clutch?: number;
+        opening?: number;
+        leetify?: number;
+        ctLeetify?: number;
+        tLeetify?: number;
+        gamesPlayed?: number;
+        leetifyRatingRounds?: number;
+    };
+    personalBests: { gameId?: string; skillId: string; value: string }[];
+}

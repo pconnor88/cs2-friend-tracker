@@ -20,9 +20,12 @@ import {
     FormVsBaselineSection,
     FriendlyFireLeaderboardSection,
     HeadlineRow,
+    LeetifyProgressionSection,
+    LeetifyRatingsSection,
     MapSection,
     MapStalenessSection,
     MultiKillLeaderboardSection,
+    PersonalBestsSection,
     RankTrendSection,
     RecentMatchesSection,
     SessionFatigueSection,
@@ -84,6 +87,7 @@ export const Dashboard = () => {
                             <div className="dashboard-toolbar">{navigator}</div>
                             <TrendSection period={period} />
                             <RankTrendSection period={period} />
+                            <LeetifyProgressionSection period={period} />
                             <ComparisonChartSection period={period} />
                             <SessionFatigueSection period={period} />
                             <TimeOfDaySection period={period} />
@@ -113,9 +117,11 @@ export const Dashboard = () => {
                                 {navigator}
                             </div>
                             <FormVsBaselineSection period={period} mapName={effectiveMapName} />
+                            <LeetifyRatingsSection period={period} mapName={effectiveMapName} />
                             <SquadSynergySection period={period} mapName={effectiveMapName} />
                             <AimMechanicsSection period={period} mapName={effectiveMapName} />
                             <CheaterExposureSection period={period} mapName={effectiveMapName} />
+                            <PersonalBestsSection period={period} mapName={effectiveMapName} />
                         </>
                     )}
                 </main>

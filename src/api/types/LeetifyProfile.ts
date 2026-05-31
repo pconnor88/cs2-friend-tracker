@@ -28,10 +28,31 @@ export interface LeetifyProfileGame {
     [key: string]: unknown;
 }
 
+export interface LeetifyRecentGameRatings {
+    aim?: number;
+    positioning?: number;
+    utility?: number;
+    clutch?: number;
+    opening?: number;
+    leetify?: number;
+    ctLeetify?: number;
+    tLeetify?: number;
+    gamesPlayed?: number;
+    leetifyRatingRounds?: number;
+}
+
+export interface LeetifyPersonalBest {
+    gameId?: string;
+    skillId: string;
+    value: string;
+}
+
 export interface LeetifyProfile {
     id?: string;
     name?: string;
     steam64Id?: string;
     games?: LeetifyProfileGame[];
+    recentGameRatings?: LeetifyRecentGameRatings;
+    personalBestsCs2?: LeetifyPersonalBest[];
     [key: string]: unknown;
 }

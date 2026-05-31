@@ -1,6 +1,6 @@
 import Dexie, { Table } from "dexie";
 
-import { MatchPlayerLink, PlayerSyncRecord, ProfileSnapshotRecord } from "db/types";
+import { MatchPlayerLink, PlayerProfileRecord, PlayerSyncRecord, ProfileSnapshotRecord } from "db/types";
 import { Match } from "models";
 
 class MatchDb extends Dexie {
@@ -8,6 +8,7 @@ class MatchDb extends Dexie {
     players!: Table<PlayerSyncRecord, string>;
     matchPlayers!: Table<MatchPlayerLink, number>;
     profileSnapshots!: Table<ProfileSnapshotRecord, number>;
+    playerProfiles!: Table<PlayerProfileRecord, string>;
 
     constructor() {
         super("cs2-friend-tracker");
@@ -21,6 +22,13 @@ class MatchDb extends Dexie {
             players: "steam64",
             matchPlayers: "++id, gameId, steam64, finishedAt, [gameId+steam64]",
             profileSnapshots: "++id, [gameId+steam64], steam64, finishedAt, gameId"
+        });
+        this.version(3).stores({
+            matches: "gameId, finishedAt, mapName",
+            players: "steam64",
+            matchPlayers: "++id, gameId, steam64, finishedAt, [gameId+steam64]",
+            profileSnapshots: "++id, [gameId+steam64], steam64, finishedAt, gameId",
+            playerProfiles: "steam64"
         });
     }
 }
@@ -50,6 +58,12 @@ export const upsertMatch = async (match: Match): Promise<void> => {
         }
     });
 };
+
+export const upsertPlayerProfile = async (record: PlayerProfileRecord): Promise<void> => {
+    await db.playerProfiles.put(record);
+};
+
+export const getAllPlayerProfiles = async (): Promise<PlayerProfileRecord[]> => db.playerProfiles.toArray();
 
 export const upsertProfileSnapshot = async (snap: ProfileSnapshotRecord): Promise<void> => {
     await db.transaction("rw", db.profileSnapshots, async () => {
@@ -174,15 +188,13 @@ export const importAll = async (payload: DbExport): Promise<void> => {
 export const clearAll = async (): Promise<void> => {
     await db.transaction(
         "rw",
-        db.matches,
-        db.players,
-        db.matchPlayers,
-        db.profileSnapshots,
+        [db.matches, db.players, db.matchPlayers, db.profileSnapshots, db.playerProfiles],
         async () => {
             await db.matches.clear();
             await db.players.clear();
             await db.matchPlayers.clear();
             await db.profileSnapshots.clear();
+            await db.playerProfiles.clear();
         }
     );
 };

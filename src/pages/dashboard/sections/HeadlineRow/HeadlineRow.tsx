@@ -22,9 +22,11 @@ export const HeadlineRow = ({ period, mapName }: HeadlineRowProps) => {
         );
     }
 
+    const eligible = data.filter(s => s.matchesPlayed > 0);
+
     const rankFor = (extract: (s: PlayerStats) => number, higherIsBetter = true) => {
         const ranked = rankStats(
-            data.map(s => ({ steam64: s.steam64, value: extract(s) })),
+            eligible.map(s => ({ steam64: s.steam64, value: extract(s) })),
             { higherIsBetter }
         );
         return new Map(ranked.map(r => [r.steam64, r.rank as Rank]));
@@ -51,10 +53,10 @@ export const HeadlineRow = ({ period, mapName }: HeadlineRowProps) => {
                             key={player.steam64}
                             player={player}
                             stats={stats}
-                            rankMatches={matchesRank.get(player.steam64) ?? Rank.Silver}
-                            rankWinPercent={winRank.get(player.steam64) ?? Rank.Silver}
-                            rankKd={kdRank.get(player.steam64) ?? Rank.Silver}
-                            rankRating={ratingRank.get(player.steam64) ?? Rank.Silver}
+                            rankMatches={matchesRank.get(player.steam64)}
+                            rankWinPercent={winRank.get(player.steam64)}
+                            rankKd={kdRank.get(player.steam64)}
+                            rankRating={ratingRank.get(player.steam64)}
                         />
                     );
                 })}

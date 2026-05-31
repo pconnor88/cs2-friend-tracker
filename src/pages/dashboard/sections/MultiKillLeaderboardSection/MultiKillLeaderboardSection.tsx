@@ -88,8 +88,9 @@ export const MultiKillLeaderboardSection = ({ period, mapName }: MultiKillLeader
                     </div>
                 ))}
                 {ROWS.map(row => {
+                    const eligible = data.filter(s => s.matchesPlayed > 0);
                     const ranked = rankStats(
-                        data.map(s => ({ steam64: s.steam64, value: row.extract(s) })),
+                        eligible.map(s => ({ steam64: s.steam64, value: row.extract(s) })),
                         { higherIsBetter: row.higherIsBetter }
                     );
                     const rankByPlayer = new Map(ranked.map(r => [r.steam64, r.rank]));
@@ -98,7 +99,18 @@ export const MultiKillLeaderboardSection = ({ period, mapName }: MultiKillLeader
                             <div className="leaderboard-cell leaderboard-cell-label">{row.label}</div>
                             {PLAYERS.map(player => {
                                 const stats = data.find(s => s.steam64 === player.steam64);
-                                const value = stats !== undefined ? row.extract(stats) : 0;
+                                const hasMatches = stats !== undefined && stats.matchesPlayed > 0;
+                                if (!hasMatches) {
+                                    return (
+                                        <div
+                                            key={player.steam64}
+                                            className="leaderboard-cell leaderboard-cell-numeric leaderboard-cell-empty"
+                                        >
+                                            —
+                                        </div>
+                                    );
+                                }
+                                const value = row.extract(stats);
                                 const rank = rankByPlayer.get(player.steam64) ?? Rank.Silver;
                                 const classes = [
                                     "leaderboard-cell",

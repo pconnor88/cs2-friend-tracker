@@ -7,10 +7,10 @@ import "./PlayerColumn.scss";
 interface PlayerColumnProps {
     player: PlayerConfig;
     stats: PlayerStats;
-    rankMatches: Rank;
-    rankWinPercent: Rank;
-    rankKd: Rank;
-    rankRating: Rank;
+    rankMatches?: Rank;
+    rankWinPercent?: Rank;
+    rankKd?: Rank;
+    rankRating?: Rank;
 }
 
 export const PlayerColumn = ({
@@ -22,6 +22,8 @@ export const PlayerColumn = ({
     rankRating
 }: PlayerColumnProps) => {
     const dotClass = `player-column-dot player-column-dot-${player.paletteIndex + 1}`;
+    const noData = stats.matchesPlayed === 0;
+    const dash = "—";
 
     return (
         <div className="player-column">
@@ -31,33 +33,37 @@ export const PlayerColumn = ({
                     <h3 className="player-column-name">{player.displayName}</h3>
                 </div>
                 <div className="player-column-sub">
-                    <FormattedNumber value={stats.matchesPlayed} /> matches
+                    {noData ? "No matches" : (
+                        <>
+                            <FormattedNumber value={stats.matchesPlayed} /> matches
+                        </>
+                    )}
                 </div>
             </div>
             <div className="player-column-grid">
                 <StatCard
                     label="Matches"
-                    value={<FormattedNumber value={stats.matchesPlayed} />}
-                    rank={rankMatches}
+                    value={noData ? dash : <FormattedNumber value={stats.matchesPlayed} />}
+                    rank={noData ? undefined : rankMatches}
                     paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="Win %"
-                    value={<FormattedPercent value={stats.winPercent} decimals={1} />}
-                    rank={rankWinPercent}
+                    value={noData ? dash : <FormattedPercent value={stats.winPercent} decimals={1} />}
+                    rank={noData ? undefined : rankWinPercent}
                     paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="K/D"
-                    value={<FormattedNumber value={stats.kd} decimals={2} />}
-                    rank={rankKd}
+                    value={noData ? dash : <FormattedNumber value={stats.kd} decimals={2} />}
+                    rank={noData ? undefined : rankKd}
                     paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="HLTV"
-                    value={<FormattedNumber value={stats.hltvRating} decimals={2} />}
-                    sublabel="Avg HLTV rating"
-                    rank={rankRating}
+                    value={noData ? dash : <FormattedNumber value={stats.hltvRating} decimals={2} />}
+                    sublabel={noData ? undefined : "Avg HLTV rating"}
+                    rank={noData ? undefined : rankRating}
                     paletteIndex={player.paletteIndex}
                 />
             </div>

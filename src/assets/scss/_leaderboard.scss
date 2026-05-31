@@ -46,6 +46,10 @@
     background: color-mix(in srgb, var(--rank-bronze) 8%, transparent);
 }
 
+.leaderboard-cell-empty {
+    color: var(--ink-low);
+}
+
 .leaderboard-header {
     font-weight: var(--weight-semibold);
     background: var(--surface-elevated);

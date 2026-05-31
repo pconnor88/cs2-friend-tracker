@@ -233,3 +233,65 @@
     font-size: var(--text-sm);
     color: var(--ink-low);
 }
+
+@media (max-width: 767px) {
+    .recent-matches-row {
+        grid-template-columns: auto 1fr auto 32px;
+        grid-template-areas:
+            "date map score chev"
+            "players players players players";
+        gap: var(--space-3) var(--space-5);
+        padding: var(--space-5);
+    }
+
+    .recent-matches-date {
+        grid-area: date;
+        font-size: var(--text-sm);
+    }
+
+    .recent-matches-map {
+        grid-area: map;
+    }
+
+    .recent-matches-score {
+        grid-area: score;
+    }
+
+    .recent-matches-players {
+        grid-area: players;
+    }
+
+    .recent-matches-chevron {
+        grid-area: chev;
+    }
+
+    .recent-matches-body {
+        padding: var(--space-5);
+    }
+
+    .recent-matches-meta {
+        gap: var(--space-3);
+        font-size: var(--text-xs);
+    }
+
+    .recent-matches-scoreboard {
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .recent-matches-scoreboard-head-row,
+    .recent-matches-scoreboard-row {
+        min-width: 680px;
+    }
+}
+
+@media (max-width: 479px) {
+    .recent-matches-row {
+        grid-template-columns: 1fr auto 32px;
+        grid-template-areas:
+            "date score chev"
+            "map map map"
+            "players players players";
+        gap: var(--space-2) var(--space-4);
+    }
+}

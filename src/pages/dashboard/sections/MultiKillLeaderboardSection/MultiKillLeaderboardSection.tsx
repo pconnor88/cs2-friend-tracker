@@ -75,9 +75,10 @@ export const MultiKillLeaderboardSection = ({ period, mapName }: MultiKillLeader
         <PageSection
             title="Multi-kill leaderboard"
             description="Totals and per-match averages for 2k, 3k, 4k, and ace rounds."
-            action={legend}
         >
-            <div className="leaderboard-grid">
+            {legend}
+            <div className="leaderboard-grid-wrapper">
+                <div className="leaderboard-grid">
                 <div className="leaderboard-header leaderboard-cell leaderboard-cell-label">Stat</div>
                 {PLAYERS.map(player => (
                     <div
@@ -126,6 +127,7 @@ export const MultiKillLeaderboardSection = ({ period, mapName }: MultiKillLeader
                         </div>
                     );
                 })}
+                </div>
             </div>
         </PageSection>
     );

@@ -92,9 +92,10 @@ export const CombatLeaderboardSection = ({ period, mapName }: CombatLeaderboardS
         <PageSection
             title="Combat leaderboard"
             description="Per-player combat stats ranked across the squad."
-            action={legend}
         >
-            <div className="leaderboard-grid">
+            {legend}
+            <div className="leaderboard-grid-wrapper">
+                <div className="leaderboard-grid">
                 <div className="leaderboard-header leaderboard-cell leaderboard-cell-label">Stat</div>
                 {PLAYERS.map(player => (
                     <div
@@ -143,6 +144,7 @@ export const CombatLeaderboardSection = ({ period, mapName }: CombatLeaderboardS
                         </div>
                     );
                 })}
+                </div>
             </div>
         </PageSection>
     );

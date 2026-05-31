@@ -4,6 +4,13 @@
     gap: var(--space-7);
 }
 
+@media (max-width: 767px) {
+    .form-baseline-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+}
+
 .form-baseline-card {
     display: flex;
     flex-direction: column;

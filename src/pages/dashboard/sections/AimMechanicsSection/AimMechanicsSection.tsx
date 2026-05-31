@@ -89,9 +89,10 @@ export const AimMechanicsSection = ({ period, mapName }: AimMechanicsSectionProp
         <PageSection
             title="Aim mechanics"
             description="Diagnostic metrics — these are coachable. Lower is better for pre-aim and reaction time."
-            action={legend}
         >
-            <div className="leaderboard-grid">
+            {legend}
+            <div className="leaderboard-grid-wrapper">
+                <div className="leaderboard-grid">
                 <div className="leaderboard-header leaderboard-cell leaderboard-cell-label">Stat</div>
                 {PLAYERS.map(player => (
                     <div
@@ -140,6 +141,7 @@ export const AimMechanicsSection = ({ period, mapName }: AimMechanicsSectionProp
                         </div>
                     );
                 })}
+                </div>
             </div>
         </PageSection>
     );

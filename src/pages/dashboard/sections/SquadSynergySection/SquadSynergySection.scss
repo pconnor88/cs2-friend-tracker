@@ -4,6 +4,17 @@
     gap: var(--space-7);
 }
 
+@media (max-width: 767px) {
+    .synergy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+
+    .synergy-row-bar {
+        width: 6rem;
+    }
+}
+
 .synergy-panel {
     display: flex;
     flex-direction: column;

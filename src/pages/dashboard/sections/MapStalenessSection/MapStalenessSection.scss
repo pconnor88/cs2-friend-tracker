@@ -4,6 +4,13 @@
     gap: var(--space-7);
 }
 
+@media (max-width: 1023px) {
+    .staleness-cards {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+}
+
 .staleness-card {
     display: flex;
     flex-direction: column;

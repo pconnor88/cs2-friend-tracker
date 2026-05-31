@@ -14,8 +14,24 @@
 
 .dashboard-toolbar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-5);
+}
+
+@media (max-width: 479px) {
+    .dashboard-toolbar {
+        gap: var(--space-4);
+    }
+
+    .dashboard-toolbar > * {
+        flex: 1 1 100%;
+    }
+
+    .dashboard-toolbar .map-filter,
+    .dashboard-toolbar .period-navigator {
+        justify-content: space-between;
+    }
 }
 
 .dashboard-inert {

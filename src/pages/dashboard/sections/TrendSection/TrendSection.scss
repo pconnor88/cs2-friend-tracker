@@ -9,6 +9,22 @@
     gap: var(--space-7);
 }
 
+.trend-section-canvas {
+    width: 100%;
+    height: 320px;
+}
+
+@media (max-width: 767px) {
+    .trend-section-chart {
+        padding: var(--space-5);
+        gap: var(--space-5);
+    }
+
+    .trend-section-canvas {
+        height: 260px;
+    }
+}
+
 .trend-section-legend {
     display: flex;
     flex-wrap: wrap;

@@ -83,9 +83,10 @@ export const FriendlyFireLeaderboardSection = ({ period, mapName }: FriendlyFire
         <PageSection
             title="Friendly fire leaderboard"
             description="Flashbangs and grenade damage inflicted on teammates. Lower is better — winner of any row gets last shout."
-            action={legend}
         >
-            <div className="leaderboard-grid">
+            {legend}
+            <div className="leaderboard-grid-wrapper">
+                <div className="leaderboard-grid">
                 <div className="leaderboard-header leaderboard-cell leaderboard-cell-label">Stat</div>
                 {PLAYERS.map(player => (
                     <div
@@ -134,6 +135,7 @@ export const FriendlyFireLeaderboardSection = ({ period, mapName }: FriendlyFire
                         </div>
                     );
                 })}
+                </div>
             </div>
         </PageSection>
     );

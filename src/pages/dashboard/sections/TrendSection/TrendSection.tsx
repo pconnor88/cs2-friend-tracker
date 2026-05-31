@@ -11,7 +11,7 @@ import {
 
 import { PageSection } from "components/layout";
 import { PLAYERS } from "config";
-import { useStatsForAllPlayers } from "hooks";
+import { useIsMobile, useStatsForAllPlayers } from "hooks";
 import { PlayerStats, StatPeriod } from "models";
 
 import "./TrendSection.scss";
@@ -89,6 +89,10 @@ const playerNameFor = (key: string): string => {
 
 export const TrendSection = ({ period }: TrendSectionProps) => {
     const { data, isLoading } = useStatsForAllPlayers(period);
+    const isMobile = useIsMobile();
+    const chartMargin = isMobile
+        ? { top: 8, right: 32, bottom: 8, left: 8 }
+        : { top: 8, right: 80, bottom: 8, left: 40 };
 
     if (isLoading || data === undefined) {
         return (
@@ -124,8 +128,9 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                         </span>
                     ))}
                 </div>
-                <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={seriesData} margin={{ top: 8, right: 80, bottom: 8, left: 40 }}>
+                <div className="trend-section-canvas">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={seriesData} margin={chartMargin}>
                         <CartesianGrid stroke="#252b38" strokeDasharray="3 3" />
                         <XAxis
                             dataKey="finishedAt"
@@ -196,6 +201,7 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                         />
                     </LineChart>
                 </ResponsiveContainer>
+                </div>
             </div>
         </PageSection>
     );

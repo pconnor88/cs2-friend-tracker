@@ -17,6 +17,16 @@
     padding: var(--space-7);
 }
 
+@media (max-width: 479px) {
+    .stat-card-regular {
+        padding: var(--space-6);
+    }
+
+    .stat-card-value {
+        font-size: var(--text-2xl);
+    }
+}
+
 .stat-card-player-1 {
     border-top-color: var(--player-1);
 }

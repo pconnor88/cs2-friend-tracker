@@ -51,8 +51,10 @@ export const AppHeader = ({ period, onPeriodChange, view, onViewChange }: AppHea
             <div className="app-header-tabs">
                 <ViewTabs value={view} onChange={onViewChange} />
             </div>
-            <div className="app-header-actions">
+            <div className="app-header-time-range">
                 <TimeRangeSelector value={period} onChange={onPeriodChange} />
+            </div>
+            <div className="app-header-icons">
                 <button
                     type="button"
                     className={isSyncing

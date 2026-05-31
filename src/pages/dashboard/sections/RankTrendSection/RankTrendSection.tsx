@@ -11,7 +11,7 @@ import {
 
 import { PageSection } from "components/layout";
 import { PLAYERS } from "config";
-import { useProfileSnapshots } from "hooks";
+import { useIsMobile, useProfileSnapshots } from "hooks";
 import { StatPeriod } from "models";
 
 import { ProfileSnapshotRecord } from "db/types";
@@ -63,6 +63,10 @@ const formatRank = (value: number): string => value.toLocaleString();
 
 export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
     const { data, isLoading } = useProfileSnapshots(period);
+    const isMobile = useIsMobile();
+    const chartMargin = isMobile
+        ? { top: 8, right: 32, bottom: 8, left: 8 }
+        : { top: 8, right: 80, bottom: 8, left: 40 };
 
     if (isLoading || data === undefined) {
         return (
@@ -98,8 +102,9 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                         </span>
                     ))}
                 </div>
-                <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={seriesData} margin={{ top: 8, right: 80, bottom: 8, left: 40 }}>
+                <div className="rank-trend-section-canvas">
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={seriesData} margin={chartMargin}>
                         <CartesianGrid stroke="#252b38" strokeDasharray="3 3" />
                         <XAxis
                             dataKey="finishedAt"
@@ -153,6 +158,7 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                         />
                     </LineChart>
                 </ResponsiveContainer>
+                </div>
             </div>
         </PageSection>
     );

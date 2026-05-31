@@ -3,3 +3,17 @@
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-7);
 }
+
+@media (max-width: 1023px) {
+    .cheater-exposure-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+    }
+}
+
+@media (max-width: 479px) {
+    .cheater-exposure-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-5);
+    }
+}

@@ -9,3 +9,15 @@
 .page-section-body {
     margin-top: var(--space-7);
 }
+
+@media (max-width: 767px) {
+    .page-section {
+        padding: var(--space-7);
+    }
+}
+
+@media (max-width: 479px) {
+    .page-section {
+        padding: var(--space-6);
+    }
+}

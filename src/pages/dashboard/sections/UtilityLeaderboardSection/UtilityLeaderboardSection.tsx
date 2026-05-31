@@ -94,9 +94,10 @@ export const UtilityLeaderboardSection = ({ period, mapName }: UtilityLeaderboar
         <PageSection
             title="Utility leaderboard"
             description="Grenade usage, flash effectiveness, and friendly fire ranked across the squad."
-            action={legend}
         >
-            <div className="leaderboard-grid">
+            {legend}
+            <div className="leaderboard-grid-wrapper">
+                <div className="leaderboard-grid">
                 <div className="leaderboard-header leaderboard-cell leaderboard-cell-label">Stat</div>
                 {PLAYERS.map(player => (
                     <div
@@ -145,6 +146,7 @@ export const UtilityLeaderboardSection = ({ period, mapName }: UtilityLeaderboar
                         </div>
                     );
                 })}
+                </div>
             </div>
         </PageSection>
     );

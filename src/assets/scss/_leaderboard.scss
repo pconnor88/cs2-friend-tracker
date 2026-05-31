@@ -1,3 +1,7 @@
+.leaderboard-grid-wrapper {
+    width: 100%;
+}
+
 .leaderboard-grid {
     display: grid;
     grid-template-columns: 220px repeat(3, 1fr);
@@ -5,6 +9,28 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--surface);
+}
+
+@media (max-width: 767px) {
+    .leaderboard-grid {
+        grid-template-columns: 140px repeat(3, 1fr);
+    }
+
+    .leaderboard-cell {
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--text-sm);
+    }
+}
+
+@media (max-width: 479px) {
+    .leaderboard-grid-wrapper {
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .leaderboard-grid {
+        min-width: 480px;
+    }
 }
 
 .leaderboard-row {
@@ -74,8 +100,10 @@
 
 .leaderboard-legend {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-6);
     align-items: center;
+    margin-bottom: var(--space-6);
 }
 
 .leaderboard-legend-item {

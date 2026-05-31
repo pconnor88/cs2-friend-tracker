@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { FormattedNumber, FormattedPercent, StatDelta } from "components/formatting";
 import { PageSection } from "components/layout";
 import { PLAYERS } from "config";
-import { useStatsForAllPlayers } from "hooks";
+import { usePeriodAnchor, useStatsForAllPlayers } from "hooks";
 import { PlayerStats, StatPeriod } from "models";
 
 import "./FormVsBaselineSection.scss";
@@ -28,9 +28,9 @@ const METRICS: MetricDef[] = [
     { label: "ADR", extract: s => s.adr, format: "number1" }
 ];
 
-const daysAgo = (n: number, now: Date = new Date()): Date => {
-    const d = new Date(now);
-    d.setDate(now.getDate() - n);
+const daysAgo = (n: number, from: Date): Date => {
+    const d = new Date(from);
+    d.setDate(from.getDate() - n);
     return d;
 };
 
@@ -52,8 +52,8 @@ const deltaDecimalsFor = (format: MetricFormat): number => {
 };
 
 export const FormVsBaselineSection = ({ period, mapName }: FormVsBaselineSectionProps) => {
-    const now = new Date();
-    const baselineRange = { from: daysAgo(90, now), to: now };
+    const { anchor } = usePeriodAnchor();
+    const baselineRange = { from: daysAgo(90, anchor), to: anchor };
 
     const { data: currentData, isLoading: currentLoading } = useStatsForAllPlayers(period, undefined, mapName);
     const { data: baselineData, isLoading: baselineLoading } = useStatsForAllPlayers(

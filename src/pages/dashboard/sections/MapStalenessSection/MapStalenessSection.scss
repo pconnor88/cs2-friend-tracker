@@ -1,0 +1,100 @@
+.staleness-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-7);
+}
+
+.staleness-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-7);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.staleness-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.staleness-card-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-pill);
+}
+
+.staleness-card-dot-1 {
+    background: var(--player-1);
+}
+
+.staleness-card-dot-2 {
+    background: var(--player-2);
+}
+
+.staleness-card-dot-3 {
+    background: var(--player-3);
+}
+
+.staleness-card-name {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.staleness-card-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.staleness-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+
+.staleness-row-neutral {
+    background: var(--surface);
+}
+
+.staleness-row-warning {
+    background: color-mix(in srgb, var(--warning) 12%, transparent);
+}
+
+.staleness-row-positive {
+    background: color-mix(in srgb, var(--positive) 12%, transparent);
+}
+
+.staleness-row-name {
+    font-family: var(--font-ui);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.staleness-row-days {
+    font-family: var(--font-ui);
+    font-size: var(--text-md);
+    color: var(--ink-mid);
+    text-align: right;
+}
+
+.staleness-row-hltv {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--ink-high);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--surface-overlay);
+    min-width: 48px;
+    text-align: center;
+}

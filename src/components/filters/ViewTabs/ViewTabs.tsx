@@ -18,7 +18,8 @@ const OPTIONS: ViewOption[] = [
     { view: DashboardView.Leaderboards, label: "Leaderboards" },
     { view: DashboardView.Graphs, label: "Graphs" },
     { view: DashboardView.Maps, label: "Maps" },
-    { view: DashboardView.Matches, label: "Matches" }
+    { view: DashboardView.Matches, label: "Matches" },
+    { view: DashboardView.Insights, label: "Insights" }
 ];
 
 export const ViewTabs = ({ value, onChange }: ViewTabsProps) => {

@@ -7,6 +7,21 @@ const normalise01 = (v: number | undefined): number => {
     return v > 1 ? v / 100 : v;
 };
 
+const numberOrNull = (v: number | undefined | null): number | null => {
+    if (v === undefined || v === null || !Number.isFinite(v)) {
+        return null;
+    }
+    return v;
+};
+
+const normalise01OrNull = (v: number | undefined | null): number | null => {
+    const n = numberOrNull(v);
+    if (n === null) {
+        return null;
+    }
+    return n > 1 ? n / 100 : n;
+};
+
 export const getKills = (p: MatchPlayer): number => p.raw.totalKills ?? 0;
 export const getDeaths = (p: MatchPlayer): number => p.raw.totalDeaths ?? 0;
 export const getAssists = (p: MatchPlayer): number => p.raw.totalAssists ?? 0;
@@ -81,3 +96,26 @@ export const getOpeningAttemptRate = (p: MatchPlayer): number =>
     p.openingDuelRaw?.openingDuelAttemptsPercentage ?? 0;
 export const getOpeningDeathRate = (p: MatchPlayer): number =>
     Math.max(0, getOpeningAttemptRate(p) - getOpeningKillRate(p));
+
+export const getCounterStrafingRatio = (p: MatchPlayer): number => p.raw.counterStrafingShotsGoodRatio ?? 0;
+export const getCounterStrafingRatioOrNull = (p: MatchPlayer): number | null =>
+    normalise01OrNull(p.raw.counterStrafingShotsGoodRatio);
+
+export const getAccuracyEnemySpotted = (p: MatchPlayer): number => p.raw.accuracyEnemySpotted ?? 0;
+export const getAccuracyEnemySpottedOrNull = (p: MatchPlayer): number | null =>
+    normalise01OrNull(p.raw.accuracyEnemySpotted);
+
+export const getAccuracyHead = (p: MatchPlayer): number => p.raw.accuracyHead ?? 0;
+export const getAccuracyHeadOrNull = (p: MatchPlayer): number | null =>
+    normalise01OrNull(p.raw.accuracyHead);
+
+export const getReactionTime = (p: MatchPlayer): number => p.raw.reactionTime ?? 0;
+export const getReactionTimeOrNull = (p: MatchPlayer): number | null => numberOrNull(p.raw.reactionTime);
+
+export const getRoundsSurvivedPercent = (p: MatchPlayer): number => p.raw.roundsSurvivedPercentage ?? 0;
+export const getRoundsSurvivedPercentOrNull = (p: MatchPlayer): number | null =>
+    normalise01OrNull(p.raw.roundsSurvivedPercentage);
+
+export const getPersonalPerformanceRating = (p: MatchPlayer): number => p.raw.personalPerformanceRating ?? 0;
+export const getPersonalPerformanceRatingOrNull = (p: MatchPlayer): number | null =>
+    numberOrNull(p.raw.personalPerformanceRating);

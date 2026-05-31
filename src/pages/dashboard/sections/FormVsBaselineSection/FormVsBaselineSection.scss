@@ -1,0 +1,92 @@
+.form-baseline-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-7);
+}
+
+.form-baseline-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-7);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.form-baseline-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.form-baseline-card-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-pill);
+}
+
+.form-baseline-card-dot-1 {
+    background: var(--player-1);
+}
+
+.form-baseline-card-dot-2 {
+    background: var(--player-2);
+}
+
+.form-baseline-card-dot-3 {
+    background: var(--player-3);
+}
+
+.form-baseline-card-name {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.form-baseline-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.form-baseline-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+}
+
+.form-baseline-row-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--ink-low);
+}
+
+.form-baseline-row-value {
+    font-family: var(--font-ui);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+    text-align: right;
+}
+
+.form-baseline-row-delta-empty {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--ink-low);
+    text-align: right;
+}
+
+.form-baseline-empty {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-low);
+    font-size: var(--text-sm);
+    padding: var(--space-5);
+}

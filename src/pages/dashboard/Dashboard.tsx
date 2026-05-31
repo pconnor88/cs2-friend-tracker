@@ -13,12 +13,21 @@ import { DashboardView } from "models";
 import { useSyncStore } from "sync";
 
 import {
+    AimMechanicsSection,
+    CheaterExposureSection,
     CombatLeaderboardSection,
+    FormVsBaselineSection,
+    FriendlyFireLeaderboardSection,
     HeadlineRow,
     MapSection,
+    MapStalenessSection,
     MultiKillLeaderboardSection,
     RankTrendSection,
     RecentMatchesSection,
+    SessionFatigueSection,
+    SideStrategySection,
+    SquadSynergySection,
+    TimeOfDaySection,
     TrendSection,
     UtilityLeaderboardSection
 } from "./sections";
@@ -66,6 +75,7 @@ export const Dashboard = () => {
                             <CombatLeaderboardSection period={period} mapName={effectiveMapName} />
                             <MultiKillLeaderboardSection period={period} mapName={effectiveMapName} />
                             <UtilityLeaderboardSection period={period} mapName={effectiveMapName} />
+                            <FriendlyFireLeaderboardSection period={period} mapName={effectiveMapName} />
                         </>
                     )}
                     {view === DashboardView.Graphs && (
@@ -73,18 +83,37 @@ export const Dashboard = () => {
                             <div className="dashboard-toolbar">{navigator}</div>
                             <TrendSection period={period} />
                             <RankTrendSection period={period} />
+                            <SessionFatigueSection period={period} />
+                            <TimeOfDaySection period={period} />
                         </>
                     )}
                     {view === DashboardView.Maps && (
                         <>
-                            <div className="dashboard-toolbar">{navigator}</div>
+                            <div className="dashboard-toolbar">
+                                <MapFilter value={mapName} options={mapOptions} onChange={setMapName} />
+                                {navigator}
+                            </div>
+                            <SideStrategySection period={period} mapName={effectiveMapName} />
                             <MapSection period={period} />
+                            <MapStalenessSection period={period} mapName={effectiveMapName} />
                         </>
                     )}
                     {view === DashboardView.Matches && (
                         <>
                             <div className="dashboard-toolbar">{navigator}</div>
                             <RecentMatchesSection period={period} />
+                        </>
+                    )}
+                    {view === DashboardView.Insights && (
+                        <>
+                            <div className="dashboard-toolbar">
+                                <MapFilter value={mapName} options={mapOptions} onChange={setMapName} />
+                                {navigator}
+                            </div>
+                            <FormVsBaselineSection period={period} mapName={effectiveMapName} />
+                            <SquadSynergySection period={period} mapName={effectiveMapName} />
+                            <AimMechanicsSection period={period} mapName={effectiveMapName} />
+                            <CheaterExposureSection period={period} mapName={effectiveMapName} />
                         </>
                     )}
                 </main>

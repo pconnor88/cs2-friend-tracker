@@ -49,7 +49,22 @@ export interface PlayerStats {
     preaimDegrees: number;
     sprayAccuracy: number;
 
-    mapBreakdown: { mapName: string; matches: number; kd: number; hltvRating: number }[];
+    counterStrafingRatio: number;
+    accuracyEnemySpotted: number;
+    accuracyHead: number;
+    reactionTime: number;
+    roundsSurvivedPercent: number;
+    personalPerformanceRating: number;
+
+    mapBreakdown: {
+        mapName: string;
+        matches: number;
+        kd: number;
+        hltvRating: number;
+        ctWinPercent: number;
+        tWinPercent: number;
+        lastPlayedAt: string;
+    }[];
 
     hltvRatingTrend: { finishedAt: string; rating: number }[];
 }

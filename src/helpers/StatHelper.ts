@@ -2,7 +2,10 @@ import { Match, MatchPlayer, PlayerStats, Rank, RankResult } from "models";
 
 import { getMatchesForPlayer, getPlayerRowFromMatch } from "./MatchHelper";
 import {
+    getAccuracyEnemySpottedOrNull,
+    getAccuracyHeadOrNull,
     getAdr,
+    getCounterStrafingRatioOrNull,
     getCtRoundsPlayed,
     getCtRoundsWon,
     getDeaths,
@@ -29,9 +32,12 @@ import {
     getOpeningAttemptRate,
     getOpeningDeathRate,
     getOpeningKillRate,
+    getPersonalPerformanceRatingOrNull,
     getPreaim,
     getRating,
+    getReactionTimeOrNull,
     getRoundsPlayed,
+    getRoundsSurvivedPercentOrNull,
     getSmokesThrown,
     getSprayAccuracy,
     getTRoundsPlayed,
@@ -166,6 +172,18 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
     let multi3 = 0;
     let multi4 = 0;
     let multi5 = 0;
+    let counterStrafingSum = 0;
+    let counterStrafingCount = 0;
+    let accuracyEnemySpottedSum = 0;
+    let accuracyEnemySpottedCount = 0;
+    let accuracyHeadSum = 0;
+    let accuracyHeadCount = 0;
+    let reactionTimeSum = 0;
+    let reactionTimeCount = 0;
+    let roundsSurvivedPercentSum = 0;
+    let roundsSurvivedPercentCount = 0;
+    let personalPerformanceRatingSum = 0;
+    let personalPerformanceRatingCount = 0;
 
     for (const row of rows) {
         const rounds = getRoundsPlayed(row);
@@ -211,6 +229,36 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
         multi3 += getMultiKills3(row);
         multi4 += getMultiKills4(row);
         multi5 += getMultiKills5(row);
+        const counterStrafingValue = getCounterStrafingRatioOrNull(row);
+        if (counterStrafingValue !== null) {
+            counterStrafingSum += counterStrafingValue;
+            counterStrafingCount += 1;
+        }
+        const accuracyEnemySpottedValue = getAccuracyEnemySpottedOrNull(row);
+        if (accuracyEnemySpottedValue !== null) {
+            accuracyEnemySpottedSum += accuracyEnemySpottedValue;
+            accuracyEnemySpottedCount += 1;
+        }
+        const accuracyHeadValue = getAccuracyHeadOrNull(row);
+        if (accuracyHeadValue !== null) {
+            accuracyHeadSum += accuracyHeadValue;
+            accuracyHeadCount += 1;
+        }
+        const reactionTimeValue = getReactionTimeOrNull(row);
+        if (reactionTimeValue !== null) {
+            reactionTimeSum += reactionTimeValue;
+            reactionTimeCount += 1;
+        }
+        const roundsSurvivedPercentValue = getRoundsSurvivedPercentOrNull(row);
+        if (roundsSurvivedPercentValue !== null) {
+            roundsSurvivedPercentSum += roundsSurvivedPercentValue;
+            roundsSurvivedPercentCount += 1;
+        }
+        const personalPerformanceRatingValue = getPersonalPerformanceRatingOrNull(row);
+        if (personalPerformanceRatingValue !== null) {
+            personalPerformanceRatingSum += personalPerformanceRatingValue;
+            personalPerformanceRatingCount += 1;
+        }
     }
 
     const totalRounds = ctPlayed + tPlayed;
@@ -221,10 +269,24 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
         deaths: number;
         hltvSum: number;
         hltvCount: number;
+        ctRoundsWon: number;
+        ctRoundsLost: number;
+        tRoundsWon: number;
+        tRoundsLost: number;
+        lastPlayedAt: string;
     }>();
     for (const m of playerMatches) {
         const entry = mapAgg.get(m.mapName) ?? {
-            matches: 0, kills: 0, deaths: 0, hltvSum: 0, hltvCount: 0
+            matches: 0,
+            kills: 0,
+            deaths: 0,
+            hltvSum: 0,
+            hltvCount: 0,
+            ctRoundsWon: 0,
+            ctRoundsLost: 0,
+            tRoundsWon: 0,
+            tRoundsLost: 0,
+            lastPlayedAt: m.finishedAt
         };
         entry.matches += 1;
         const row = getPlayerRowFromMatch(m, steam64);
@@ -236,6 +298,17 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
                 entry.hltvSum += hltv;
                 entry.hltvCount += 1;
             }
+            const ctWonRow = getCtRoundsWon(row);
+            const ctPlayedRow = getCtRoundsPlayed(row);
+            const tWonRow = getTRoundsWon(row);
+            const tPlayedRow = getTRoundsPlayed(row);
+            entry.ctRoundsWon += ctWonRow;
+            entry.ctRoundsLost += ctPlayedRow - ctWonRow;
+            entry.tRoundsWon += tWonRow;
+            entry.tRoundsLost += tPlayedRow - tWonRow;
+        }
+        if (new Date(m.finishedAt).getTime() > new Date(entry.lastPlayedAt).getTime()) {
+            entry.lastPlayedAt = m.finishedAt;
         }
         mapAgg.set(m.mapName, entry);
     }
@@ -245,7 +318,10 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
             mapName,
             matches: e.matches,
             kd: safeDivide(e.kills, e.deaths),
-            hltvRating: safeDivide(e.hltvSum, e.hltvCount)
+            hltvRating: safeDivide(e.hltvSum, e.hltvCount),
+            ctWinPercent: safeDivide(e.ctRoundsWon, e.ctRoundsWon + e.ctRoundsLost),
+            tWinPercent: safeDivide(e.tRoundsWon, e.tRoundsWon + e.tRoundsLost),
+            lastPlayedAt: e.lastPlayedAt
         }))
         .sort((a, b) => a.mapName.localeCompare(b.mapName));
 
@@ -311,6 +387,12 @@ export const aggregatePlayerStats = (allMatches: Match[], steam64: string): Play
         multiKills5Total: multi5,
         preaimDegrees: safeDivide(preaimSum, rows.length),
         sprayAccuracy: safeDivide(sprayAccuracySum, rows.length),
+        counterStrafingRatio: safeDivide(counterStrafingSum, counterStrafingCount),
+        accuracyEnemySpotted: safeDivide(accuracyEnemySpottedSum, accuracyEnemySpottedCount),
+        accuracyHead: safeDivide(accuracyHeadSum, accuracyHeadCount),
+        reactionTime: safeDivide(reactionTimeSum, reactionTimeCount),
+        roundsSurvivedPercent: safeDivide(roundsSurvivedPercentSum, roundsSurvivedPercentCount),
+        personalPerformanceRating: safeDivide(personalPerformanceRatingSum, personalPerformanceRatingCount),
         mapBreakdown,
         hltvRatingTrend
     };

@@ -6,7 +6,8 @@ const VALID = new Set<string>([
     DashboardView.Leaderboards,
     DashboardView.Graphs,
     DashboardView.Maps,
-    DashboardView.Matches
+    DashboardView.Matches,
+    DashboardView.Insights
 ]);
 
 const readViewFromUrl = (): DashboardView => {

@@ -1,0 +1,105 @@
+.side-strategy-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.side-strategy-row {
+    display: grid;
+    grid-template-columns: 1fr 110px 110px 96px;
+    align-items: center;
+    gap: var(--space-7);
+    padding: var(--space-5) var(--space-7);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.side-strategy-map {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+.side-strategy-map-name {
+    font-family: var(--font-ui);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--ink-high);
+}
+
+.side-strategy-map-sub {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--ink-low);
+}
+
+.side-strategy-ct,
+.side-strategy-t {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    opacity: 0.7;
+    width: 100%;
+}
+
+.side-strategy-side-winner {
+    opacity: 1;
+}
+
+.side-strategy-ct.side-strategy-side-winner {
+    background: color-mix(in srgb, var(--player-3) 18%, transparent);
+}
+
+.side-strategy-t.side-strategy-side-winner {
+    background: color-mix(in srgb, var(--player-1) 18%, transparent);
+}
+
+.side-strategy-side-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.06em;
+    color: var(--ink-low);
+    text-transform: uppercase;
+}
+
+.side-strategy-ct .side-strategy-side-value {
+    font-family: var(--font-ui);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--player-3);
+}
+
+.side-strategy-t .side-strategy-side-value {
+    font-family: var(--font-ui);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--player-1);
+}
+
+.side-strategy-pick {
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.08em;
+    padding: var(--space-3) 0;
+    border-radius: var(--radius-pill);
+    text-transform: uppercase;
+    color: var(--surface);
+    text-align: center;
+    width: 100%;
+}
+
+.side-strategy-pick-ct {
+    background: var(--player-3);
+}
+
+.side-strategy-pick-t {
+    background: var(--player-1);
+}

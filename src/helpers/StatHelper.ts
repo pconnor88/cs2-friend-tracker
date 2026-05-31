@@ -79,10 +79,24 @@ export const rankStats = (
         higherIsBetter ? b.value - a.value : a.value - b.value
     );
 
-    const rankByOrder: Rank[] = [Rank.Gold, Rank.Silver, Rank.Bronze];
+    const medalForValueRank = (valueRank: number): Rank => {
+        if (valueRank <= 1) {
+            return Rank.Gold;
+        }
+        if (valueRank === 2) {
+            return Rank.Silver;
+        }
+        return Rank.Bronze;
+    };
     const rankFor = new Map<string, Rank>();
+    let currentValueRank = 1;
+    let previousValue: number | undefined;
     sorted.forEach((entry, index) => {
-        rankFor.set(entry.steam64, rankByOrder[Math.min(index, rankByOrder.length - 1)]);
+        if (previousValue !== undefined && entry.value !== previousValue) {
+            currentValueRank = index + 1;
+        }
+        rankFor.set(entry.steam64, medalForValueRank(currentValueRank));
+        previousValue = entry.value;
     });
 
     const bestValue = sorted[0].value;

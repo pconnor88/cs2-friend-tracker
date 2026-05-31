@@ -187,6 +187,57 @@ describe("rankStats", () => {
         expect(byId.get("c")?.isWorst).toBe(true);
     });
 
+    it("awards two golds and one bronze when first place is tied", () => {
+        const result = rankStats([
+            { steam64: "a", value: 30 },
+            { steam64: "b", value: 30 },
+            { steam64: "c", value: 10 }
+        ]);
+        const byId = new Map(result.map(r => [r.steam64, r]));
+        expect(byId.get("a")?.rank).toBe(Rank.Gold);
+        expect(byId.get("b")?.rank).toBe(Rank.Gold);
+        expect(byId.get("c")?.rank).toBe(Rank.Bronze);
+    });
+
+    it("awards one gold and two silvers when second place is tied", () => {
+        const result = rankStats([
+            { steam64: "a", value: 30 },
+            { steam64: "b", value: 10 },
+            { steam64: "c", value: 10 }
+        ]);
+        const byId = new Map(result.map(r => [r.steam64, r]));
+        expect(byId.get("a")?.rank).toBe(Rank.Gold);
+        expect(byId.get("b")?.rank).toBe(Rank.Silver);
+        expect(byId.get("c")?.rank).toBe(Rank.Silver);
+    });
+
+    it("awards three golds when all values are tied", () => {
+        const result = rankStats([
+            { steam64: "a", value: 10 },
+            { steam64: "b", value: 10 },
+            { steam64: "c", value: 10 }
+        ]);
+        const byId = new Map(result.map(r => [r.steam64, r]));
+        expect(byId.get("a")?.rank).toBe(Rank.Gold);
+        expect(byId.get("b")?.rank).toBe(Rank.Gold);
+        expect(byId.get("c")?.rank).toBe(Rank.Gold);
+    });
+
+    it("applies tie-aware ranking with higher-is-worse", () => {
+        const result = rankStats(
+            [
+                { steam64: "a", value: 10 },
+                { steam64: "b", value: 10 },
+                { steam64: "c", value: 30 }
+            ],
+            { higherIsBetter: false }
+        );
+        const byId = new Map(result.map(r => [r.steam64, r]));
+        expect(byId.get("a")?.rank).toBe(Rank.Gold);
+        expect(byId.get("b")?.rank).toBe(Rank.Gold);
+        expect(byId.get("c")?.rank).toBe(Rank.Bronze);
+    });
+
     it("handles a single-entry list — best is true, worst is false (no spread)", () => {
         const result = rankStats([{ steam64: "a", value: 5 }]);
         expect(result).toHaveLength(1);

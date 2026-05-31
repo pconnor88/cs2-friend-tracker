@@ -1,7 +1,14 @@
-import { MapFilter } from "components/filters";
+import { MapFilter, PeriodNavigator } from "components/filters";
 import { AppHeader } from "components/layout";
 import { SyncOverlay } from "components/overlays";
-import { ALL_MAPS, useAllMatches, useMapFilter, useTimeRange, useView } from "hooks";
+import {
+    ALL_MAPS,
+    useAllMatches,
+    useMapFilter,
+    usePeriodAnchor,
+    useTimeRange,
+    useView
+} from "hooks";
 import { DashboardView } from "models";
 import { useSyncStore } from "sync";
 
@@ -22,6 +29,7 @@ export const Dashboard = () => {
     const { period, setPeriod } = useTimeRange();
     const { view, setView } = useView();
     const { mapName, setMapName } = useMapFilter();
+    const { anchor, setAnchor } = usePeriodAnchor();
     const { data: allMatches } = useAllMatches(period);
     const sync = useSyncStore();
     const inert = sync.status === "syncing";
@@ -32,6 +40,10 @@ export const Dashboard = () => {
             : Array.from(new Set(allMatches.map(m => m.mapName))).sort((a, b) => a.localeCompare(b));
 
     const effectiveMapName = mapName === ALL_MAPS ? undefined : mapName;
+
+    const navigator = (
+        <PeriodNavigator period={period} anchor={anchor} onChange={setAnchor} />
+    );
 
     return (
         <>
@@ -48,6 +60,7 @@ export const Dashboard = () => {
                         <>
                             <div className="dashboard-toolbar">
                                 <MapFilter value={mapName} options={mapOptions} onChange={setMapName} />
+                                {navigator}
                             </div>
                             <HeadlineRow period={period} mapName={effectiveMapName} />
                             <CombatLeaderboardSection period={period} mapName={effectiveMapName} />
@@ -57,12 +70,23 @@ export const Dashboard = () => {
                     )}
                     {view === DashboardView.Graphs && (
                         <>
+                            <div className="dashboard-toolbar">{navigator}</div>
                             <TrendSection period={period} />
                             <RankTrendSection period={period} />
                         </>
                     )}
-                    {view === DashboardView.Maps && <MapSection period={period} />}
-                    {view === DashboardView.Matches && <RecentMatchesSection period={period} />}
+                    {view === DashboardView.Maps && (
+                        <>
+                            <div className="dashboard-toolbar">{navigator}</div>
+                            <MapSection period={period} />
+                        </>
+                    )}
+                    {view === DashboardView.Matches && (
+                        <>
+                            <div className="dashboard-toolbar">{navigator}</div>
+                            <RecentMatchesSection period={period} />
+                        </>
+                    )}
                 </main>
             </div>
         </>

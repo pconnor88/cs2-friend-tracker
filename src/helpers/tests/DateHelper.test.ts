@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { formatFriendlyDate, rangeForPeriod } from "helpers";
+import { canStepForward, formatFriendlyDate, rangeForPeriod, shiftAnchor } from "helpers";
 import { StatPeriod } from "models/enums";
 
 const NOW_ISO = "2026-05-30T12:00:00.000Z";
@@ -15,24 +15,98 @@ describe("rangeForPeriod", () => {
         vi.useRealTimers();
     });
 
-    it("returns the last 7 days for Week", () => {
-        const { from, to } = rangeForPeriod(StatPeriod.Week);
-        expect(to.toISOString()).toBe(NOW_ISO);
-        const diffDays = (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24);
-        expect(diffDays).toBe(7);
+    it("returns Monday 00:00 -> Sunday 23:59 of the week containing the anchor", () => {
+        // Anchor: Saturday 30 May 2026
+        const anchor = new Date(2026, 4, 30, 12, 0, 0);
+        const { from, to } = rangeForPeriod(StatPeriod.Week, anchor);
+        expect(from.getDay()).toBe(1);
+        expect(from.getHours()).toBe(0);
+        expect(from.getDate()).toBe(25);
+        expect(to.getDay()).toBe(0);
+        expect(to.getDate()).toBe(31);
+        expect(to.getHours()).toBe(23);
+        expect(to.getMinutes()).toBe(59);
     });
 
-    it("returns the last 30 days for Month", () => {
-        const { from, to } = rangeForPeriod(StatPeriod.Month);
-        expect(to.toISOString()).toBe(NOW_ISO);
-        const diffDays = (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24);
-        expect(diffDays).toBe(30);
+    it("handles week containing a Sunday correctly (Sunday belongs to previous Monday)", () => {
+        const sunday = new Date(2026, 4, 31, 12, 0, 0);
+        const { from, to } = rangeForPeriod(StatPeriod.Week, sunday);
+        expect(from.getDate()).toBe(25);
+        expect(to.getDate()).toBe(31);
     });
 
-    it("returns epoch -> now for AllTime", () => {
-        const { from, to } = rangeForPeriod(StatPeriod.AllTime);
+    it("returns the calendar month of the anchor", () => {
+        const anchor = new Date(2026, 4, 15, 12, 0, 0);
+        const { from, to } = rangeForPeriod(StatPeriod.Month, anchor);
+        expect(from.getDate()).toBe(1);
+        expect(from.getMonth()).toBe(4);
+        expect(to.getDate()).toBe(31);
+        expect(to.getMonth()).toBe(4);
+        expect(to.getHours()).toBe(23);
+    });
+
+    it("returns 28-day February in a non-leap year", () => {
+        const anchor = new Date(2026, 1, 15, 12, 0, 0);
+        const { to } = rangeForPeriod(StatPeriod.Month, anchor);
+        expect(to.getDate()).toBe(28);
+    });
+
+    it("returns epoch -> anchor for AllTime", () => {
+        const anchor = new Date(NOW_ISO);
+        const { from, to } = rangeForPeriod(StatPeriod.AllTime, anchor);
         expect(from.getTime()).toBe(0);
-        expect(to.toISOString()).toBe(NOW_ISO);
+        expect(to.getTime()).toBe(anchor.getTime());
+    });
+});
+
+describe("shiftAnchor", () => {
+    it("shifts by 7 days for Week", () => {
+        const anchor = new Date(2026, 4, 15, 12);
+        const back = shiftAnchor(StatPeriod.Week, anchor, -1);
+        const forward = shiftAnchor(StatPeriod.Week, anchor, 1);
+        expect(back.getDate()).toBe(8);
+        expect(forward.getDate()).toBe(22);
+    });
+
+    it("shifts by 1 month for Month and resets to the 1st", () => {
+        const anchor = new Date(2026, 4, 15, 12);
+        const back = shiftAnchor(StatPeriod.Month, anchor, -1);
+        const forward = shiftAnchor(StatPeriod.Month, anchor, 1);
+        expect(back.getMonth()).toBe(3);
+        expect(back.getDate()).toBe(1);
+        expect(forward.getMonth()).toBe(5);
+        expect(forward.getDate()).toBe(1);
+    });
+
+    it("is a no-op for AllTime", () => {
+        const anchor = new Date(2026, 4, 15);
+        expect(shiftAnchor(StatPeriod.AllTime, anchor, 1).getTime()).toBe(anchor.getTime());
+    });
+});
+
+describe("canStepForward", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(NOW_ISO));
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("disallows stepping into a future week", () => {
+        const thisWeek = new Date(2026, 4, 30, 12);
+        expect(canStepForward(StatPeriod.Week, thisWeek)).toBe(false);
+    });
+
+    it("allows stepping into a past-to-current week", () => {
+        const lastWeek = new Date(2026, 4, 20, 12);
+        expect(canStepForward(StatPeriod.Week, lastWeek)).toBe(true);
+    });
+
+    it("disallows stepping into a future month", () => {
+        const thisMonth = new Date(2026, 4, 15, 12);
+        expect(canStepForward(StatPeriod.Month, thisMonth)).toBe(false);
     });
 });
 

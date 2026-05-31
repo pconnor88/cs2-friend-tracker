@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 import { purgeNonPremier } from "db";
@@ -6,7 +6,11 @@ import { Dashboard } from "pages/dashboard";
 
 const queryClient = new QueryClient({
     defaultOptions: {
-        queries: { staleTime: 1000 * 60 * 5, refetchOnWindowFocus: false }
+        queries: {
+            staleTime: 1000 * 60 * 5,
+            refetchOnWindowFocus: false,
+            placeholderData: keepPreviousData
+        }
     }
 });
 

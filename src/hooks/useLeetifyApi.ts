@@ -17,6 +17,7 @@ import { Match, PlayerConfig, PlayerStats, StatPeriod } from "models";
 import { syncStore } from "sync";
 
 import { useApiQuery } from "./useApiQuery";
+import { usePeriodAnchor } from "./usePeriodAnchor";
 
 const TRACKED_STEAM64S = PLAYERS.map(p => p.steam64);
 
@@ -87,27 +88,32 @@ const syncAllPlayers = async (): Promise<void> => {
 interface AllMatchesQuery {
     period: StatPeriod;
     customRange?: { from: Date; to: Date };
+    anchor: Date;
 }
 
 const readMatchesFromDb = async (query: AllMatchesQuery): Promise<Match[]> => {
-    const { from, to } = query.customRange ?? rangeForPeriod(query.period);
+    const { from, to } = query.customRange ?? rangeForPeriod(query.period, query.anchor);
     return await getMatchesInRange(TRACKED_STEAM64S, from, to);
 };
 
-export const useAllMatches = (period: StatPeriod, customRange?: { from: Date; to: Date }) =>
-    useApiQuery<Match[]>(
-        ["matches", period, customRange?.from?.toISOString() ?? null, customRange?.to?.toISOString() ?? null],
-        () => readMatchesFromDb({ period, customRange })
+export const useAllMatches = (period: StatPeriod, customRange?: { from: Date; to: Date }) => {
+    const { anchor } = usePeriodAnchor();
+    return useApiQuery<Match[]>(
+        ["matches", period, anchor.toISOString(), customRange?.from?.toISOString() ?? null, customRange?.to?.toISOString() ?? null],
+        () => readMatchesFromDb({ period, customRange, anchor })
     );
+};
 
-export const useProfileSnapshots = (period: StatPeriod, customRange?: { from: Date; to: Date }) =>
-    useApiQuery<ProfileSnapshotRecord[]>(
-        ["snapshots", period, customRange?.from?.toISOString() ?? null, customRange?.to?.toISOString() ?? null],
+export const useProfileSnapshots = (period: StatPeriod, customRange?: { from: Date; to: Date }) => {
+    const { anchor } = usePeriodAnchor();
+    return useApiQuery<ProfileSnapshotRecord[]>(
+        ["snapshots", period, anchor.toISOString(), customRange?.from?.toISOString() ?? null, customRange?.to?.toISOString() ?? null],
         async () => {
-            const { from, to } = customRange ?? rangeForPeriod(period);
+            const { from, to } = customRange ?? rangeForPeriod(period, anchor);
             return await getProfileSnapshotsInRange(TRACKED_STEAM64S, from, to);
         }
     );
+};
 
 export const useStatsForAllPlayers = (
     period: StatPeriod,

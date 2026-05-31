@@ -200,7 +200,7 @@
 }
 
 .recent-matches-scoreboard-row:hover {
-    background: var(--surface-overlay);
+    background: color-mix(in srgb, var(--ink-high) 6%, var(--surface-overlay));
 }
 
 .recent-matches-scoreboard-name {

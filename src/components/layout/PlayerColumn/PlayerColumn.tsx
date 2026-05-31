@@ -45,26 +45,22 @@ export const PlayerColumn = ({
                     label="Matches"
                     value={noData ? dash : <FormattedNumber value={stats.matchesPlayed} />}
                     rank={noData ? undefined : rankMatches}
-                    paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="Win %"
                     value={noData ? dash : <FormattedPercent value={stats.winPercent} decimals={1} />}
                     rank={noData ? undefined : rankWinPercent}
-                    paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="K/D"
                     value={noData ? dash : <FormattedNumber value={stats.kd} decimals={2} />}
                     rank={noData ? undefined : rankKd}
-                    paletteIndex={player.paletteIndex}
                 />
                 <StatCard
                     label="HLTV"
                     value={noData ? dash : <FormattedNumber value={stats.hltvRating} decimals={2} />}
                     sublabel={noData ? undefined : "Avg HLTV rating"}
                     rank={noData ? undefined : rankRating}
-                    paletteIndex={player.paletteIndex}
                 />
             </div>
         </div>

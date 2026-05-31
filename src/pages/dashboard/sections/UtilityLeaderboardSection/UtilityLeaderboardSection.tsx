@@ -10,6 +10,7 @@ import { PlayerStats, Rank, StatPeriod } from "models";
 
 interface UtilityLeaderboardSectionProps {
     period: StatPeriod;
+    mapName?: string;
 }
 
 type FormatKind =
@@ -69,8 +70,8 @@ const legend = (
     </div>
 );
 
-export const UtilityLeaderboardSection = ({ period }: UtilityLeaderboardSectionProps) => {
-    const { data, isLoading } = useStatsForAllPlayers(period);
+export const UtilityLeaderboardSection = ({ period, mapName }: UtilityLeaderboardSectionProps) => {
+    const { data, isLoading } = useStatsForAllPlayers(period, undefined, mapName);
 
     if (isLoading || data === undefined) {
         return (

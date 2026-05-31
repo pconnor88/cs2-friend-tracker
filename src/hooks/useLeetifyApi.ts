@@ -109,13 +109,21 @@ export const useProfileSnapshots = (period: StatPeriod, customRange?: { from: Da
         }
     );
 
-export const useStatsForAllPlayers = (period: StatPeriod, customRange?: { from: Date; to: Date }) => {
+export const useStatsForAllPlayers = (
+    period: StatPeriod,
+    customRange?: { from: Date; to: Date },
+    mapName?: string
+) => {
     const { data: matches, ...rest } = useAllMatches(period, customRange);
+    const filteredMatches =
+        matches !== undefined && mapName !== undefined
+            ? matches.filter(m => m.mapName === mapName)
+            : matches;
     const stats: PlayerStats[] | undefined =
-        matches === undefined
+        filteredMatches === undefined
             ? undefined
-            : PLAYERS.map(p => aggregatePlayerStats(matches, p.steam64));
-    return { data: stats, matches, ...rest };
+            : PLAYERS.map(p => aggregatePlayerStats(filteredMatches, p.steam64));
+    return { data: stats, matches: filteredMatches, ...rest };
 };
 
 export const useSync = () => {

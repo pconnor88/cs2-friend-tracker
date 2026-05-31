@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { FormattedNumber } from "components/formatting";
 import { PageSection } from "components/layout";
 import { PLAYERS } from "config";
@@ -18,7 +20,24 @@ interface MapRow {
     hltvRating: number;
 }
 
+type SortKey = "mapName" | "matches" | "kd" | "hltvRating";
+type SortDir = "asc" | "desc";
+
+interface SortState {
+    key: SortKey;
+    dir: SortDir;
+}
+
 const MIN_MATCHES_FOR_HIGHLIGHT = 5;
+
+const DEFAULT_SORT: SortState = { key: "hltvRating", dir: "desc" };
+
+const DEFAULT_DIR_BY_KEY: Record<SortKey, SortDir> = {
+    mapName: "asc",
+    matches: "desc",
+    kd: "desc",
+    hltvRating: "desc"
+};
 
 const formatMapName = (mapName: string): string =>
     mapName
@@ -63,11 +82,58 @@ const rowClass = (row: MapRow, highlights: MapHighlights): string => {
     return "map-row map-row-neutral";
 };
 
+const sortRows = (rows: MapRow[], sort: SortState): MapRow[] => {
+    const sign = sort.dir === "asc" ? 1 : -1;
+    return [...rows].sort((a, b) => {
+        if (sort.key === "mapName") {
+            return a.mapName.localeCompare(b.mapName) * sign;
+        }
+        return (a[sort.key] - b[sort.key]) * sign;
+    });
+};
+
+const sortIndicator = (active: boolean, dir: SortDir): string => {
+    if (!active) {
+        return "";
+    }
+    return dir === "asc" ? " ↑" : " ↓";
+};
+
 export const MapSection = ({ period, customRange }: MapSectionProps) => {
     const { data } = useStatsForAllPlayers(period, customRange);
+    const [sort, setSort] = useState<SortState>(DEFAULT_SORT);
+
+    const handleHeaderClick = (key: SortKey) => {
+        if (sort.key === key) {
+            setSort({ key, dir: sort.dir === "asc" ? "desc" : "asc" });
+            return;
+        }
+        setSort({ key, dir: DEFAULT_DIR_BY_KEY[key] });
+    };
+
+    const headerButton = (label: string, key: SortKey, alignClass: string) => {
+        const active = sort.key === key;
+        const className = active
+            ? `map-card-head-button ${alignClass} map-card-head-button-active`
+            : `map-card-head-button ${alignClass}`;
+        return (
+            <button
+                type="button"
+                className={className}
+                onClick={() => handleHeaderClick(key)}
+                aria-sort={active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+            >
+                {label}
+                {sortIndicator(active, sort.dir)}
+            </button>
+        );
+    };
 
     return (
-        <PageSection title="Maps" description="Per-map K/D and HLTV rating, with best and worst highlighted per player.">
+        <PageSection
+            title="Maps"
+            description="Per-map K/D and HLTV rating. Click a column header to sort all cards."
+        >
             {data === undefined ? (
                 <div className="section-loading">Loading…</div>
             ) : (
@@ -81,6 +147,7 @@ export const MapSection = ({ period, customRange }: MapSectionProps) => {
                         const maps: MapRow[] = stats?.mapBreakdown ?? [];
                         const totalMatches = stats?.matchesPlayed ?? 0;
                         const highlights = computeHighlights(maps);
+                        const sortedMaps = sortRows(maps, sort);
 
                         return (
                             <div className={cardClass} key={player.slug}>
@@ -94,16 +161,16 @@ export const MapSection = ({ period, customRange }: MapSectionProps) => {
                                     </div>
                                 </div>
                                 <div className="map-card-grid map-card-grid-head">
-                                    <span className="map-card-head-label">Map</span>
-                                    <span className="map-card-head-value">Games</span>
-                                    <span className="map-card-head-value">K/D</span>
-                                    <span className="map-card-head-value">HLTV</span>
+                                    {headerButton("Map", "mapName", "map-card-head-label")}
+                                    {headerButton("Games", "matches", "map-card-head-value")}
+                                    {headerButton("K/D", "kd", "map-card-head-value")}
+                                    {headerButton("HLTV", "hltvRating", "map-card-head-value")}
                                 </div>
                                 <div className="map-card-rows">
-                                    {maps.length === 0 ? (
+                                    {sortedMaps.length === 0 ? (
                                         <div className="map-row map-row-empty">No matches</div>
                                     ) : (
-                                        maps.map((row) => (
+                                        sortedMaps.map((row) => (
                                             <div className={rowClass(row, highlights)} key={row.mapName}>
                                                 <span className="map-row-name">
                                                     {formatMapName(row.mapName)}

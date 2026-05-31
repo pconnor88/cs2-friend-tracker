@@ -74,7 +74,7 @@
 
 .map-card-grid {
     display: grid;
-    grid-template-columns: 1fr 3.5rem 4rem 4rem;
+    grid-template-columns: 1fr 4.5rem 4rem 4rem;
     align-items: center;
     gap: var(--space-5);
     padding: 0 var(--space-5);
@@ -97,6 +97,26 @@
     text-align: right;
 }
 
+.map-card-head-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: color var(--motion-fast) var(--motion-ease);
+
+    &:hover {
+        color: var(--ink-high);
+    }
+}
+
+.map-card-head-button-active {
+    color: var(--ink-high);
+}
+
 .map-card-rows {
     display: flex;
     flex-direction: column;
@@ -105,7 +125,7 @@
 
 .map-row {
     display: grid;
-    grid-template-columns: 1fr 3.5rem 4rem 4rem;
+    grid-template-columns: 1fr 4.5rem 4rem 4rem;
     align-items: center;
     gap: var(--space-5);
     padding: var(--space-4) var(--space-5);

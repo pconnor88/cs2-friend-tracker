@@ -1,7 +1,6 @@
 import {
     Brush,
     CartesianGrid,
-    Legend,
     Line,
     LineChart,
     ResponsiveContainer,
@@ -67,6 +66,17 @@ const formatTick = (value: string): string => {
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 };
 
+const formatBrushTick = (value: string): string => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+    const dd = date.getDate().toString().padStart(2, "0");
+    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+    const yy = (date.getFullYear() % 100).toString().padStart(2, "0");
+    return `${dd}/${mm}/${yy}`;
+};
+
 const playerNameFor = (key: string): string => {
     const steam64 = key.endsWith(AVG_SUFFIX)
         ? key.slice(0, -AVG_SUFFIX.length)
@@ -103,14 +113,26 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
             description="Per-match HLTV rating across the period. Thick line is the 10-match rolling average."
         >
             <div className="trend-section-chart">
-                <ResponsiveContainer width="100%" height={360}>
-                    <LineChart data={seriesData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+                <div className="trend-section-legend">
+                    {PLAYERS.map(player => (
+                        <span key={player.steam64} className="trend-section-legend-item">
+                            <span
+                                className={`trend-section-legend-swatch trend-section-legend-swatch-${player.paletteIndex + 1}`}
+                                aria-hidden="true"
+                            />
+                            {player.displayName}
+                        </span>
+                    ))}
+                </div>
+                <ResponsiveContainer width="100%" height={320}>
+                    <LineChart data={seriesData} margin={{ top: 8, right: 80, bottom: 8, left: 40 }}>
                         <CartesianGrid stroke="#252b38" strokeDasharray="3 3" />
                         <XAxis
                             dataKey="finishedAt"
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             tickFormatter={formatTick}
+                            height={60}
                         />
                         <YAxis
                             stroke="#8a8f9b"
@@ -119,6 +141,8 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                             allowDataOverflow
                         />
                         <Tooltip
+                            allowEscapeViewBox={{ x: true, y: true }}
+                            wrapperStyle={{ pointerEvents: "none", zIndex: 50 }}
                             contentStyle={{
                                 background: "#1a2030",
                                 border: "1px solid #252b38",
@@ -133,16 +157,6 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                                 }
                                 return [value.toFixed(2), playerNameFor(name)];
                             }}
-                        />
-                        <Legend
-                            formatter={(value: string) => playerNameFor(value)}
-                            wrapperStyle={{ color: "#b8bcc8" }}
-                            payload={PLAYERS.map(player => ({
-                                value: `${player.steam64}${AVG_SUFFIX}`,
-                                type: "line",
-                                id: player.steam64,
-                                color: PLAYER_COLOURS[player.paletteIndex]
-                            }))}
                         />
                         {PLAYERS.map(player => (
                             <Line
@@ -178,7 +192,7 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                             stroke="#eda338"
                             fill="#1a2030"
                             travellerWidth={12}
-                            tickFormatter={formatTick}
+                            tickFormatter={formatBrushTick}
                         />
                     </LineChart>
                 </ResponsiveContainer>

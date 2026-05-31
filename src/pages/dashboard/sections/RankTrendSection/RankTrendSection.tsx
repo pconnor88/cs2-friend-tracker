@@ -1,7 +1,6 @@
 import {
     Brush,
     CartesianGrid,
-    Legend,
     Line,
     LineChart,
     ResponsiveContainer,
@@ -30,7 +29,7 @@ type SeriesRow = { finishedAt: string } & Record<string, number | string | undef
 const buildSeriesData = (snapshots: ProfileSnapshotRecord[]): SeriesRow[] => {
     const byDate = new Map<string, SeriesRow>();
     for (const snap of snapshots) {
-        if (snap.skillLevel === undefined || snap.skillLevel <= 0) {
+        if (snap.skillLevel === undefined || snap.skillLevel < 300) {
             continue;
         }
         const dayKey = snap.finishedAt.slice(0, 10);
@@ -47,6 +46,17 @@ const formatTick = (value: string): string => {
         return value;
     }
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+};
+
+const formatBrushTick = (value: string): string => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+    const dd = date.getDate().toString().padStart(2, "0");
+    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+    const yy = (date.getFullYear() % 100).toString().padStart(2, "0");
+    return `${dd}/${mm}/${yy}`;
 };
 
 const formatRank = (value: number): string => value.toLocaleString();
@@ -77,14 +87,26 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
             description="Leetify-reported CS2 Premier rating per match."
         >
             <div className="rank-trend-section-chart">
+                <div className="rank-trend-section-legend">
+                    {PLAYERS.map(player => (
+                        <span key={player.steam64} className="rank-trend-section-legend-item">
+                            <span
+                                className={`rank-trend-section-legend-swatch rank-trend-section-legend-swatch-${player.paletteIndex + 1}`}
+                                aria-hidden="true"
+                            />
+                            {player.displayName}
+                        </span>
+                    ))}
+                </div>
                 <ResponsiveContainer width="100%" height={320}>
-                    <LineChart data={seriesData} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+                    <LineChart data={seriesData} margin={{ top: 8, right: 80, bottom: 8, left: 40 }}>
                         <CartesianGrid stroke="#252b38" strokeDasharray="3 3" />
                         <XAxis
                             dataKey="finishedAt"
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             tickFormatter={formatTick}
+                            height={60}
                         />
                         <YAxis
                             stroke="#8a8f9b"
@@ -93,6 +115,8 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                             tickFormatter={formatRank}
                         />
                         <Tooltip
+                            allowEscapeViewBox={{ x: true, y: true }}
+                            wrapperStyle={{ pointerEvents: "none", zIndex: 50 }}
                             contentStyle={{
                                 background: "#1a2030",
                                 border: "1px solid #252b38",
@@ -105,13 +129,6 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                                 const player = PLAYERS.find(p => p.steam64 === name);
                                 return [formatRank(value), player?.displayName ?? name];
                             }}
-                        />
-                        <Legend
-                            formatter={(value: string) => {
-                                const player = PLAYERS.find(p => p.steam64 === value);
-                                return player?.displayName ?? value;
-                            }}
-                            wrapperStyle={{ color: "#b8bcc8" }}
                         />
                         {PLAYERS.map(player => (
                             <Line
@@ -132,7 +149,7 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                             stroke="#eda338"
                             fill="#1a2030"
                             travellerWidth={12}
-                            tickFormatter={formatTick}
+                            tickFormatter={formatBrushTick}
                         />
                     </LineChart>
                 </ResponsiveContainer>

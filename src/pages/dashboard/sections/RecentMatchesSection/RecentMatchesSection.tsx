@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { FormattedNumber, FormattedPercent, FriendlyDate } from "components/formatting";
 import { PageSection } from "components/layout";
@@ -7,10 +7,15 @@ import {
     getAdr,
     getAssists,
     getDeaths,
+    getHeadshotPercent,
+    getHltvRating,
     getKast,
     getKills,
-    getPlayerRowFromMatch,
-    getRating
+    getMultiKills2,
+    getMultiKills3,
+    getMultiKills4,
+    getMultiKills5,
+    getPlayerRowFromMatch
 } from "helpers";
 import { useAllMatches } from "hooks";
 import { Match, StatPeriod } from "models";
@@ -19,7 +24,8 @@ import "./RecentMatchesSection.scss";
 
 interface RecentMatchesSectionProps {
     period: StatPeriod;
-    limit?: number;
+    initialCount?: number;
+    pageSize?: number;
 }
 
 const prettifyMapName = (mapName: string): string =>
@@ -39,9 +45,64 @@ const getResultToneClass = (result: Match["matchResult"]): string => {
     return "result-tie";
 };
 
-export const RecentMatchesSection = ({ period, limit = 25 }: RecentMatchesSectionProps) => {
+const formatModeLabel = (dataSource: string): string => {
+    if (dataSource === "matchmaking") {
+        return "Premier";
+    }
+    return dataSource.replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const formatFinishedAt = (iso: string): string => {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) {
+        return iso;
+    }
+    return date.toLocaleString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+};
+
+export const RecentMatchesSection = ({
+    period,
+    initialCount = 25,
+    pageSize = 25
+}: RecentMatchesSectionProps) => {
     const { data: matches } = useAllMatches(period);
     const [openId, setOpenId] = useState<string | null>(null);
+    const [displayedCount, setDisplayedCount] = useState<number>(initialCount);
+    const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        setDisplayedCount(initialCount);
+    }, [period, initialCount]);
+
+    const totalMatches = matches?.length ?? 0;
+    const hasMore = displayedCount < totalMatches;
+
+    useEffect(() => {
+        if (!hasMore) {
+            return;
+        }
+        const sentinel = sentinelRef.current;
+        if (sentinel === null) {
+            return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    setDisplayedCount((current) => Math.min(current + pageSize, totalMatches));
+                }
+            }
+        }, { rootMargin: "200px 0px" });
+        observer.observe(sentinel);
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasMore, pageSize, totalMatches]);
 
     if (matches === undefined) {
         return (
@@ -61,7 +122,7 @@ export const RecentMatchesSection = ({ period, limit = 25 }: RecentMatchesSectio
 
     const sorted = [...matches]
         .sort((a, b) => new Date(b.finishedAt).getTime() - new Date(a.finishedAt).getTime())
-        .slice(0, limit);
+        .slice(0, displayedCount);
 
     const handleToggle = (gameId: string) => {
         if (openId === gameId) {
@@ -124,20 +185,43 @@ export const RecentMatchesSection = ({ period, limit = 25 }: RecentMatchesSectio
                             </button>
                             {isOpen ? (
                                 <div className="recent-matches-body">
+                                    <div className="recent-matches-meta">
+                                        <span className="recent-matches-meta-item">
+                                            {prettifyMapName(match.mapName)}
+                                        </span>
+                                        <span className="recent-matches-meta-divider" aria-hidden="true">·</span>
+                                        <span className="recent-matches-meta-item">
+                                            {formatModeLabel(match.dataSource)}
+                                        </span>
+                                        <span className="recent-matches-meta-divider" aria-hidden="true">·</span>
+                                        <span className="recent-matches-meta-item">
+                                            {formatFinishedAt(match.finishedAt)}
+                                        </span>
+                                        <span className="recent-matches-meta-divider" aria-hidden="true">·</span>
+                                        <span className={`recent-matches-meta-result ${getResultToneClass(match.matchResult)}`}>
+                                            {match.matchResult === "win" ? "Won" : match.matchResult === "loss" ? "Lost" : "Tied"} {match.scoreOwn}–{match.scoreOpponent}
+                                        </span>
+                                    </div>
                                     <div className="recent-matches-scoreboard">
-                                        <div className="recent-matches-scoreboard-head">Player</div>
-                                        <div className="recent-matches-scoreboard-head">K</div>
-                                        <div className="recent-matches-scoreboard-head">D</div>
-                                        <div className="recent-matches-scoreboard-head">A</div>
-                                        <div className="recent-matches-scoreboard-head">ADR</div>
-                                        <div className="recent-matches-scoreboard-head">KAST</div>
-                                        <div className="recent-matches-scoreboard-head">Rating</div>
-                                        {playersInMatch.map((p) => {
-                                            const row = getPlayerRowFromMatch(match, p.steam64);
-                                            if (row === undefined) {
-                                                return null;
-                                            }
-                                            return (
+                                        <div className="recent-matches-scoreboard-head-row">
+                                            <span className="recent-matches-scoreboard-head recent-matches-scoreboard-head-name">Player</span>
+                                            <span className="recent-matches-scoreboard-head">K</span>
+                                            <span className="recent-matches-scoreboard-head">D</span>
+                                            <span className="recent-matches-scoreboard-head">A</span>
+                                            <span className="recent-matches-scoreboard-head">ADR</span>
+                                            <span className="recent-matches-scoreboard-head">HLTV</span>
+                                            <span className="recent-matches-scoreboard-head">HS %</span>
+                                            <span className="recent-matches-scoreboard-head">KAST</span>
+                                            <span className="recent-matches-scoreboard-head">2K</span>
+                                            <span className="recent-matches-scoreboard-head">3K</span>
+                                            <span className="recent-matches-scoreboard-head">4K</span>
+                                            <span className="recent-matches-scoreboard-head">Ace</span>
+                                        </div>
+                                        {playersInMatch
+                                            .map((p) => ({ player: p, row: getPlayerRowFromMatch(match, p.steam64) }))
+                                            .filter((entry): entry is { player: typeof entry.player; row: NonNullable<typeof entry.row> } => entry.row !== undefined)
+                                            .sort((a, b) => getHltvRating(b.row) - getHltvRating(a.row))
+                                            .map(({ player: p, row }) => (
                                                 <div
                                                     key={p.steam64}
                                                     className={`recent-matches-scoreboard-row recent-matches-scoreboard-row-${p.paletteIndex + 1}`}
@@ -158,20 +242,43 @@ export const RecentMatchesSection = ({ period, limit = 25 }: RecentMatchesSectio
                                                         <FormattedNumber value={getAdr(row)} decimals={1} />
                                                     </span>
                                                     <span className="recent-matches-scoreboard-cell">
-                                                        <FormattedPercent value={getKast(row)} />
+                                                        <FormattedNumber value={getHltvRating(row)} decimals={2} />
                                                     </span>
                                                     <span className="recent-matches-scoreboard-cell">
-                                                        <FormattedNumber value={getRating(row)} decimals={2} />
+                                                        <FormattedPercent value={getHeadshotPercent(row)} decimals={0} />
+                                                    </span>
+                                                    <span className="recent-matches-scoreboard-cell">
+                                                        <FormattedPercent value={getKast(row)} decimals={0} />
+                                                    </span>
+                                                    <span className="recent-matches-scoreboard-cell">
+                                                        <FormattedNumber value={getMultiKills2(row)} />
+                                                    </span>
+                                                    <span className="recent-matches-scoreboard-cell">
+                                                        <FormattedNumber value={getMultiKills3(row)} />
+                                                    </span>
+                                                    <span className="recent-matches-scoreboard-cell">
+                                                        <FormattedNumber value={getMultiKills4(row)} />
+                                                    </span>
+                                                    <span className="recent-matches-scoreboard-cell">
+                                                        <FormattedNumber value={getMultiKills5(row)} />
                                                     </span>
                                                 </div>
-                                            );
-                                        })}
+                                            ))}
                                     </div>
                                 </div>
                             ) : null}
                         </div>
                     );
                 })}
+                {hasMore ? (
+                    <div ref={sentinelRef} className="recent-matches-sentinel" aria-hidden="true">
+                        Loading more…
+                    </div>
+                ) : (
+                    <div className="recent-matches-end">
+                        End of matches · {totalMatches} shown
+                    </div>
+                )}
             </div>
         </PageSection>
     );

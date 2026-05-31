@@ -10,6 +10,7 @@ import { PlayerStats, Rank, StatPeriod } from "models";
 
 interface MultiKillLeaderboardSectionProps {
     period: StatPeriod;
+    mapName?: string;
 }
 
 type FormatKind = { kind: "number"; decimals: number };
@@ -50,8 +51,8 @@ const legend = (
     </div>
 );
 
-export const MultiKillLeaderboardSection = ({ period }: MultiKillLeaderboardSectionProps) => {
-    const { data, isLoading } = useStatsForAllPlayers(period);
+export const MultiKillLeaderboardSection = ({ period, mapName }: MultiKillLeaderboardSectionProps) => {
+    const { data, isLoading } = useStatsForAllPlayers(period, undefined, mapName);
 
     if (isLoading || data === undefined) {
         return (

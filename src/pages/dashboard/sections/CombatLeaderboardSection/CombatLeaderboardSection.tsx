@@ -10,6 +10,7 @@ import { PlayerStats, Rank, StatPeriod } from "models";
 
 interface CombatLeaderboardSectionProps {
     period: StatPeriod;
+    mapName?: string;
 }
 
 type FormatKind =
@@ -67,8 +68,8 @@ const legend = (
     </div>
 );
 
-export const CombatLeaderboardSection = ({ period }: CombatLeaderboardSectionProps) => {
-    const { data, isLoading } = useStatsForAllPlayers(period);
+export const CombatLeaderboardSection = ({ period, mapName }: CombatLeaderboardSectionProps) => {
+    const { data, isLoading } = useStatsForAllPlayers(period, undefined, mapName);
 
     if (isLoading || data === undefined) {
         return (

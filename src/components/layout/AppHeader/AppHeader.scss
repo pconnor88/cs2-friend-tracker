@@ -29,8 +29,11 @@
     color: var(--ink-high);
 }
 
-.app-header-spacer {
+.app-header-tabs {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--space-7);
 }
 
 .app-header-actions {

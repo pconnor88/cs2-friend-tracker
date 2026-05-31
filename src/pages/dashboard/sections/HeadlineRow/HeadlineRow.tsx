@@ -8,10 +8,11 @@ import "./HeadlineRow.scss";
 
 interface HeadlineRowProps {
     period: StatPeriod;
+    mapName?: string;
 }
 
-export const HeadlineRow = ({ period }: HeadlineRowProps) => {
-    const { data, isLoading } = useStatsForAllPlayers(period);
+export const HeadlineRow = ({ period, mapName }: HeadlineRowProps) => {
+    const { data, isLoading } = useStatsForAllPlayers(period, undefined, mapName);
 
     if (isLoading || data === undefined) {
         return (

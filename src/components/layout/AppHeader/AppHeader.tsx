@@ -1,7 +1,7 @@
 import { CustomButton } from "components/buttons";
-import { TimeRangeSelector } from "components/filters";
+import { TimeRangeSelector, ViewTabs } from "components/filters";
 import { useSync } from "hooks";
-import { StatPeriod } from "models";
+import { DashboardView, StatPeriod } from "models";
 import { useSyncStore } from "sync";
 
 import "./AppHeader.scss";
@@ -9,9 +9,11 @@ import "./AppHeader.scss";
 interface AppHeaderProps {
     period: StatPeriod;
     onPeriodChange: (next: StatPeriod) => void;
+    view: DashboardView;
+    onViewChange: (next: DashboardView) => void;
 }
 
-export const AppHeader = ({ period, onPeriodChange }: AppHeaderProps) => {
+export const AppHeader = ({ period, onPeriodChange, view, onViewChange }: AppHeaderProps) => {
     const sync = useSync();
     const syncState = useSyncStore();
     const isSyncing = syncState.status === "syncing";
@@ -39,7 +41,9 @@ export const AppHeader = ({ period, onPeriodChange }: AppHeaderProps) => {
                 </svg>
                 <span className="app-header-brand-text">CS2 Friend Tracker</span>
             </div>
-            <div className="app-header-spacer" />
+            <div className="app-header-tabs">
+                <ViewTabs value={view} onChange={onViewChange} />
+            </div>
             <div className="app-header-actions">
                 <TimeRangeSelector value={period} onChange={onPeriodChange} />
                 <CustomButton variant="ghost" size="sm" onClick={handleSync} loading={isSyncing} disabled={isSyncing}>

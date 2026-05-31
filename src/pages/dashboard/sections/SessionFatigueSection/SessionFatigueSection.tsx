@@ -149,6 +149,7 @@ export const SessionFatigueSection = ({ period }: SessionFatigueSectionProps) =>
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             domain={[0.6, 1.4]}
+                            width={32}
                             allowDataOverflow
                         />
                         <Tooltip

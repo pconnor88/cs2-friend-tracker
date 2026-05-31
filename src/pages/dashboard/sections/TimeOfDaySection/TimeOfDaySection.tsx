@@ -92,6 +92,7 @@ export const TimeOfDaySection = ({ period }: TimeOfDaySectionProps) => {
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             domain={[0, 1]}
+                            width={40}
                             tickFormatter={formatWinRate}
                         />
                         <Tooltip

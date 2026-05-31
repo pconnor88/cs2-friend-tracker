@@ -1,6 +1,7 @@
 export * from "./AimMechanicsSection";
 export * from "./CheaterExposureSection";
 export * from "./CombatLeaderboardSection";
+export * from "./ComparisonChartSection";
 export * from "./FormVsBaselineSection";
 export * from "./FriendlyFireLeaderboardSection";
 export * from "./HeadlineRow";

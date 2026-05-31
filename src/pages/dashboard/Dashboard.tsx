@@ -16,6 +16,7 @@ import {
     AimMechanicsSection,
     CheaterExposureSection,
     CombatLeaderboardSection,
+    ComparisonChartSection,
     FormVsBaselineSection,
     FriendlyFireLeaderboardSection,
     HeadlineRow,
@@ -83,6 +84,7 @@ export const Dashboard = () => {
                             <div className="dashboard-toolbar">{navigator}</div>
                             <TrendSection period={period} />
                             <RankTrendSection period={period} />
+                            <ComparisonChartSection period={period} />
                             <SessionFatigueSection period={period} />
                             <TimeOfDaySection period={period} />
                         </>

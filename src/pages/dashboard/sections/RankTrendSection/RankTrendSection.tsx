@@ -117,6 +117,7 @@ export const RankTrendSection = ({ period }: RankTrendSectionProps) => {
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             domain={["auto", "auto"]}
+                            width={48}
                             tickFormatter={formatRank}
                         />
                         <Tooltip

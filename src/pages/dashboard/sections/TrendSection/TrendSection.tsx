@@ -143,6 +143,7 @@ export const TrendSection = ({ period }: TrendSectionProps) => {
                             stroke="#8a8f9b"
                             tick={{ fill: "#8a8f9b", fontSize: 12 }}
                             domain={[0.4, 2]}
+                            width={32}
                             allowDataOverflow
                         />
                         <Tooltip

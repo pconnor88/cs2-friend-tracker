@@ -221,14 +221,31 @@ const buildChartData = (
     matchesByPlayer: Map<string, Match[]>,
     resolved: ResolvedSeries[]
 ): SeriesRow[] => {
-    const byDate = new Map<string, SeriesRow>();
+    const dailyBySlot = new Map<number, { date: string; value: number }[]>();
+    const valuesByStatKey = new Map<string, number[]>();
     for (const series of resolved) {
         const matches = matchesByPlayer.get(series.steam64) ?? [];
         const dailyValues = buildSeriesPerDay(matches, series.steam64, series.statDef);
-        const { min, max } = computeMinMax(dailyValues.map(d => d.value));
+        dailyBySlot.set(series.slot, dailyValues);
+        const bucket = valuesByStatKey.get(series.statKey) ?? [];
+        for (const point of dailyValues) {
+            bucket.push(point.value);
+        }
+        valuesByStatKey.set(series.statKey, bucket);
+    }
+
+    const minMaxByStatKey = new Map<string, { min: number; max: number }>();
+    for (const [statKey, values] of valuesByStatKey) {
+        minMaxByStatKey.set(statKey, computeMinMax(values));
+    }
+
+    const byDate = new Map<string, SeriesRow>();
+    for (const series of resolved) {
+        const dailyValues = dailyBySlot.get(series.slot) ?? [];
+        const range = minMaxByStatKey.get(series.statKey) ?? { min: 0, max: 1 };
         for (const point of dailyValues) {
             const row = byDate.get(point.date) ?? { date: point.date };
-            row[`series${series.slot}Norm`] = normalise(point.value, min, max);
+            row[`series${series.slot}Norm`] = normalise(point.value, range.min, range.max);
             row[`series${series.slot}Raw`] = point.value;
             byDate.set(point.date, row);
         }
@@ -266,7 +283,7 @@ export const ComparisonChartSection = ({ period }: ComparisonChartSectionProps) 
     return (
         <PageSection
             title="Compare trends"
-            description="Pick up to 3 player-and-stat pairs. Each series is normalised to 0–100 over its own range so trends are comparable across units. Hover for raw values."
+            description="Pick up to 3 player-and-stat pairs. Each series is normalised 0–100; series sharing a stat use a shared range so they compare directly. Hover for raw values."
         >
             <div className="comparison-chart">
                 <div className="comparison-picker">

@@ -5,6 +5,7 @@ import {
     ALL_MAPS,
     useAllMatches,
     useMapFilter,
+    useMatchDays,
     usePeriodAnchor,
     useTimeRange,
     useView
@@ -44,6 +45,7 @@ export const Dashboard = () => {
     const { mapName, setMapName } = useMapFilter();
     const { anchor, setAnchor } = usePeriodAnchor();
     const { data: allMatches } = useAllMatches(period);
+    const { data: matchDays } = useMatchDays();
     const sync = useSyncStore();
     const inert = sync.status === "syncing";
 
@@ -55,7 +57,12 @@ export const Dashboard = () => {
     const effectiveMapName = mapName === ALL_MAPS ? undefined : mapName;
 
     const navigator = (
-        <PeriodNavigator period={period} anchor={anchor} onChange={setAnchor} />
+        <PeriodNavigator
+            period={period}
+            anchor={anchor}
+            onChange={setAnchor}
+            availableDays={matchDays}
+        />
     );
 
     return (

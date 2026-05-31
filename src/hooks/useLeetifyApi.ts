@@ -4,6 +4,7 @@ import { fetchGame, fetchProfile, mapLeetifyGameToMatch } from "api";
 import { LeetifyProfileGame } from "api/types";
 import { PLAYERS } from "config";
 import {
+    getAllMatchDays,
     getAllPlayerProfiles,
     getKnownGameIds,
     getMatchesInRange,
@@ -147,6 +148,9 @@ export const usePlayerProfiles = () => {
     );
 };
 
+export const useMatchDays = () =>
+    useApiQuery<string[]>(["matchDays"], () => getAllMatchDays(TRACKED_STEAM64S));
+
 export const useStatsForAllPlayers = (
     period: StatPeriod,
     customRange?: { from: Date; to: Date },
@@ -171,5 +175,6 @@ export const useSync = () => {
         await queryClient.invalidateQueries({ queryKey: ["matches"] });
         await queryClient.invalidateQueries({ queryKey: ["snapshots"] });
         await queryClient.invalidateQueries({ queryKey: ["playerProfiles"] });
+        await queryClient.invalidateQueries({ queryKey: ["matchDays"] });
     };
 };

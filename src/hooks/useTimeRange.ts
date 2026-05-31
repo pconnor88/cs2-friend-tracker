@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { StatPeriod } from "models";
 
-const VALID = new Set<string>([StatPeriod.Week, StatPeriod.Month, StatPeriod.AllTime]);
+const VALID = new Set<string>([StatPeriod.Day, StatPeriod.Week, StatPeriod.Month, StatPeriod.AllTime]);
 
 const readPeriodFromUrl = (): StatPeriod => {
     if (typeof window === "undefined") {

@@ -40,6 +40,18 @@ export const getKnownGameIds = async (steam64: string): Promise<Set<string>> => 
     return new Set(links.map(l => l.gameId));
 };
 
+export const getAllMatchDays = async (steam64s: readonly string[]): Promise<string[]> => {
+    const wanted = new Set(steam64s);
+    const days = new Set<string>();
+    await db.matchPlayers.each(link => {
+        if (!wanted.has(link.steam64)) {
+            return;
+        }
+        days.add(link.finishedAt.slice(0, 10));
+    });
+    return Array.from(days).sort();
+};
+
 export const upsertMatch = async (match: Match): Promise<void> => {
     await db.transaction("rw", db.matches, db.matchPlayers, async () => {
         await db.matches.put(match);

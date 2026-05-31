@@ -57,6 +57,19 @@ describe("rangeForPeriod", () => {
         expect(from.getTime()).toBe(0);
         expect(to.getTime()).toBe(anchor.getTime());
     });
+
+    it("returns the single calendar day for Day", () => {
+        const anchor = new Date(2026, 4, 15, 12, 0, 0);
+        const { from, to } = rangeForPeriod(StatPeriod.Day, anchor);
+        expect(from.getFullYear()).toBe(2026);
+        expect(from.getMonth()).toBe(4);
+        expect(from.getDate()).toBe(15);
+        expect(from.getHours()).toBe(0);
+        expect(from.getMinutes()).toBe(0);
+        expect(to.getDate()).toBe(15);
+        expect(to.getHours()).toBe(23);
+        expect(to.getMinutes()).toBe(59);
+    });
 });
 
 describe("shiftAnchor", () => {
@@ -81,6 +94,23 @@ describe("shiftAnchor", () => {
     it("is a no-op for AllTime", () => {
         const anchor = new Date(2026, 4, 15);
         expect(shiftAnchor(StatPeriod.AllTime, anchor, 1).getTime()).toBe(anchor.getTime());
+    });
+
+    it("shifts by 1 day for Day", () => {
+        const anchor = new Date(2026, 4, 15, 12);
+        const back = shiftAnchor(StatPeriod.Day, anchor, -1);
+        const forward = shiftAnchor(StatPeriod.Day, anchor, 1);
+        expect(back.getDate()).toBe(14);
+        expect(back.getHours()).toBe(0);
+        expect(forward.getDate()).toBe(16);
+        expect(forward.getHours()).toBe(0);
+    });
+
+    it("crosses a month boundary correctly for Day", () => {
+        const lastOfMonth = new Date(2026, 4, 31, 12);
+        const forward = shiftAnchor(StatPeriod.Day, lastOfMonth, 1);
+        expect(forward.getMonth()).toBe(5);
+        expect(forward.getDate()).toBe(1);
     });
 });
 
@@ -107,6 +137,16 @@ describe("canStepForward", () => {
     it("disallows stepping into a future month", () => {
         const thisMonth = new Date(2026, 4, 15, 12);
         expect(canStepForward(StatPeriod.Month, thisMonth)).toBe(false);
+    });
+
+    it("allows stepping forward for a past day", () => {
+        const yesterday = new Date(2026, 4, 29, 12);
+        expect(canStepForward(StatPeriod.Day, yesterday)).toBe(true);
+    });
+
+    it("disallows stepping forward when on today", () => {
+        const today = new Date(2026, 4, 30, 12);
+        expect(canStepForward(StatPeriod.Day, today)).toBe(false);
     });
 });
 

@@ -12,6 +12,10 @@ const endOfDay = (date: Date): Date =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 
 export const rangeForPeriod = (period: StatPeriod, anchor: Date = new Date()): { from: Date; to: Date } => {
+    if (period === StatPeriod.Day) {
+        const from = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate());
+        return { from, to: endOfDay(from) };
+    }
     if (period === StatPeriod.Week) {
         const from = startOfWeek(anchor);
         const lastDay = new Date(from);
@@ -27,6 +31,14 @@ export const rangeForPeriod = (period: StatPeriod, anchor: Date = new Date()): {
 };
 
 export const formatPeriodLabel = (period: StatPeriod, anchor: Date): string => {
+    if (period === StatPeriod.Day) {
+        return anchor.toLocaleDateString(undefined, {
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+    }
     if (period === StatPeriod.Week) {
         const { from, to } = rangeForPeriod(StatPeriod.Week, anchor);
         const sameMonth = from.getMonth() === to.getMonth();
@@ -43,6 +55,11 @@ export const formatPeriodLabel = (period: StatPeriod, anchor: Date): string => {
 };
 
 export const shiftAnchor = (period: StatPeriod, anchor: Date, direction: -1 | 1): Date => {
+    if (period === StatPeriod.Day) {
+        const next = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate());
+        next.setDate(next.getDate() + direction);
+        return next;
+    }
     if (period === StatPeriod.Week) {
         const next = new Date(anchor);
         next.setDate(anchor.getDate() + 7 * direction);

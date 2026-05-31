@@ -15,6 +15,7 @@ interface PeriodOption {
 }
 
 const OPTIONS: PeriodOption[] = [
+    { period: StatPeriod.Day, label: "Day" },
     { period: StatPeriod.Week, label: "Week" },
     { period: StatPeriod.Month, label: "Month" },
     { period: StatPeriod.AllTime, label: "All time" }
